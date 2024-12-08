@@ -2,7 +2,6 @@
 import 'package:clinic_management_new/database/patient.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 
 class MedicineUpdateWidget extends StatefulWidget {
   final Patient patient;
@@ -17,7 +16,6 @@ class MedicineUpdateWidget extends StatefulWidget {
 class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
   late Box<Patient> patientBox;
   late Patient? patienT;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -29,19 +27,15 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
     // print("Starting");
     try {
       // print("Trying");
-      if (!Hive.isBoxOpen('patients4')) {
-        patientBox = await Hive.openBox<Patient>('patients4');
+      if (!Hive.isBoxOpen('patients4_1')) {
+        patientBox = await Hive.openBox<Patient>('patients4_1');
         // print("Opening");
       } else {
-        patientBox = Hive.box<Patient>('patients4');
+        patientBox = Hive.box<Patient>('patients4_1');
         // print("found");
       }
     } catch (e) {
       debugPrint('Error opening Hive box: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -88,7 +82,10 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
                         Text("Reload")
                       ],
                     ),
-                    onPressed: () => _initializeHive()),
+                    onPressed: () {
+                      patientBox = Hive.box<Patient>('patients4_1');
+                      setState(() {});
+                    }),
               ),
             ],
           ),
@@ -182,7 +179,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
     if (patient != null) {
       final name = _nameController.text;
       // final double price = double.parse(_priceController.text);
-      final quantity = 0.0;
+      const quantity = 0.0;
       // final quantity = double.parse(_quantityController.text ?? "0");
 
       final medicineRegister = MedicationsEntry(name: name, quantity: quantity);
@@ -200,7 +197,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       _quantityController.clear();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4');
+        patientBox = Hive.box<Patient>('patients4_1');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -250,7 +247,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4');
+            final box = Hive.box<Patient>('patients4_1');
             await saveCaseSheet(box);
             // await box.putAt(widget.index, widget.patient);
 

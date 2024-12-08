@@ -50,13 +50,14 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..otherMedication = fields[29] as String?
       ..treatment = fields[30] as String?
       ..totalBill = fields[31] as double
-      ..days = fields[32] as int;
+      ..days = fields[32] as int
+      ..billNo = fields[33] as String;
   }
 
   @override
   void write(BinaryWriter writer, Patient obj) {
     writer
-      ..writeByte(33)
+      ..writeByte(34)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -122,7 +123,9 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..writeByte(31)
       ..write(obj.totalBill)
       ..writeByte(32)
-      ..write(obj.days);
+      ..write(obj.days)
+      ..writeByte(33)
+      ..write(obj.billNo);
   }
 
   @override
@@ -151,13 +154,14 @@ class CaseSheetEntryAdapter extends TypeAdapter<CaseSheetEntry> {
       symptoms: fields[1] as String?,
       treatments: fields[2] as String?,
       bp: fields[3] as String?,
+      time: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CaseSheetEntry obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.date)
       ..writeByte(1)
@@ -165,7 +169,9 @@ class CaseSheetEntryAdapter extends TypeAdapter<CaseSheetEntry> {
       ..writeByte(2)
       ..write(obj.treatments)
       ..writeByte(3)
-      ..write(obj.bp);
+      ..write(obj.bp)
+      ..writeByte(4)
+      ..write(obj.time);
   }
 
   @override

@@ -10,13 +10,13 @@ import '../database/patient.dart';
 class BillTablePDFService {
   static Future<void> generatePatientPDF(Patient patient) async {
     final pdf = pw.Document();
-    final dateFormat = DateFormat('dd-MM-yyyy');
+    // final dateFormat = DateFormat('dd-MM-yyyy');
 
     // Create patient info section
-    final patientInfo = [
-      ['Name:', patient.name],
-      ['Date:', patient.age.toString()],
-    ];
+    // final patientInfo = [
+    //   ['Name:', patient.name],
+    //   ['Date:', patient.age.toString()],
+    // ];
 
     // Create case sheet table data
     final List<List<Object>> billTableSheetData = [
@@ -79,7 +79,9 @@ class BillTablePDFService {
                   _buildHeader(),
                   pw.SizedBox(height: 30),
                   pw.Row(children: [pw.Text("Name : ${patient.name}")]),
-                  pw.SizedBox(height: 30),
+                  pw.SizedBox(height: 10),
+                  pw.Row(children: [pw.Text("Bill No : ${patient.billNo}")]),
+                  pw.SizedBox(height: 10),
                   pw.Row(children: [
                     pw.Text(
                         "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}")
@@ -93,11 +95,11 @@ class BillTablePDFService {
                       fontWeight: pw.FontWeight.bold,
                       // color: PdfColors.white,
                     ),
-                    headerDecoration: pw.BoxDecoration(
+                    headerDecoration: const pw.BoxDecoration(
                         // color: PdfColors.blue600,
                         ),
                     cellHeight: 30,
-                    cellStyle: pw.TextStyle(fontSize: 10),
+                    cellStyle: const pw.TextStyle(fontSize: 10),
                     cellAlignment: pw.Alignment.centerLeft,
                     // columnWidths: {
                     //   0: pw.FlexColumnWidth(1), // Date
@@ -163,7 +165,8 @@ class BillTablePDFService {
           ),
           pw.SizedBox(height: 8),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text('Ariyoor,Venga,Kottoppadom,Mannarkkad,Palakkad',
+            pw.Text(
+                'Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
                 textAlign: pw.TextAlign.center),
           ]),
           pw.SizedBox(height: 8),

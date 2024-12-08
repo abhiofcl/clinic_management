@@ -5,7 +5,7 @@ import 'package:clinic_management_new/pages/update_bill_details.dart';
 import 'package:clinic_management_new/pdf_service/admission_note.dart';
 import 'package:clinic_management_new/pdf_service/pdfservice.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class ActiePatientListPage extends StatefulWidget {
@@ -27,10 +27,10 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
 
   Future<void> _initializeHive() async {
     try {
-      if (!Hive.isBoxOpen('patients4')) {
-        _patientBox = await Hive.openBox<Patient>('patients4');
+      if (!Hive.isBoxOpen('patients4_1')) {
+        _patientBox = await Hive.openBox<Patient>('patients4_1');
       } else {
-        _patientBox = Hive.box<Patient>('patients4');
+        _patientBox = Hive.box<Patient>('patients4_1');
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -45,8 +45,8 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
   Widget build(BuildContext context) {
     return NavigationView(
       content: ScaffoldPage(
-        header: PageHeader(
-          title: const Text('Patient Records'),
+        header: const PageHeader(
+          title: Text('Patient Records'),
           // commandBar: Row(
           //   mainAxisSize: MainAxisSize.min,
           //   children: [
@@ -74,8 +74,8 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
             const Text('Error loading patient records'),
             const SizedBox(height: 16),
             FilledButton(
-              child: const Text('Retry'),
               onPressed: _initializeHive,
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -139,8 +139,8 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
                         Row(
                           children: [
                             FilledButton(
-                              child: Row(
-                                children: const [
+                              child: const Row(
+                                children: [
                                   Icon(FluentIcons.pdf),
                                   SizedBox(width: 8),
                                   Text('Case sheet PDF'),
@@ -299,7 +299,7 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
             ),
             child: const Text('Delete'),
             onPressed: () async {
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.deleteAt(index);
               Navigator.pop(context);
               displayInfoBar(
@@ -382,7 +382,7 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.putAt(index, patient);
 
               if (context.mounted) {
@@ -451,7 +451,7 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
   //             // Update other fields...
 
   //             // Save to Hive
-  //             final box = Hive.box<Patient>('patients4');
+  //             final box = Hive.box<Patient>('patients4_1');
   //             await box.putAt(index, patient);
 
   //             if (context.mounted) {
@@ -520,7 +520,7 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
   //             // Update other fields...
 
   //             // Save to Hive
-  //             final box = Hive.box<Patient>('patients4');
+  //             final box = Hive.box<Patient>('patients4_1');
   //             await box.putAt(index, patient);
 
   //             if (context.mounted) {

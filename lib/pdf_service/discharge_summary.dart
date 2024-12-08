@@ -1,8 +1,6 @@
 // lib/services/pdf_service.dart
 import 'dart:io';
-import 'dart:typed_data';
 // import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -14,9 +12,9 @@ class DischarSummaryPDFService {
   static Future<void> generatePatientPDF(Patient patient) async {
     final pdf = pw.Document();
 
-    final ByteData logoBytes = await rootBundle.load('assets/logo.jpg');
-    final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
-    final logoImage = pw.MemoryImage(logoUint8List);
+    // final ByteData logoBytes = await rootBundle.load('assets/logo.jpg');
+    // final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
+    // final logoImage = pw.MemoryImage(logoUint8List);
 
     final List<List<Object>> caseSheetData = [
       // Header row
@@ -130,23 +128,23 @@ class DischarSummaryPDFService {
   }
 
 // Helper method to create consistent detail rows
-  static pw.Widget _buildDetailRow(String label, String value) {
-    return pw.Row(
-      children: [
-        pw.Text(
-          '$label: ',
-          style: pw.TextStyle(
-            fontSize: 10,
-            fontWeight: pw.FontWeight.bold,
-          ),
-        ),
-        pw.Text(
-          value,
-          style: const pw.TextStyle(fontSize: 10),
-        ),
-      ],
-    );
-  }
+  // static pw.Widget _buildDetailRow(String label, String value) {
+  //   return pw.Row(
+  //     children: [
+  //       pw.Text(
+  //         '$label: ',
+  //         style: pw.TextStyle(
+  //           fontSize: 10,
+  //           fontWeight: pw.FontWeight.bold,
+  //         ),
+  //       ),
+  //       pw.Text(
+  //         value,
+  //         style: const pw.TextStyle(fontSize: 10),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   static pw.Widget _buildPatientInfo(Patient patient) {
     return pw.Column(
@@ -253,7 +251,8 @@ class DischarSummaryPDFService {
           ),
           pw.SizedBox(height: 8),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text('Ariyoor,Venga,Kottoppadom,Mannarkkad,Palakkad',
+            pw.Text(
+                'Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
                 textAlign: pw.TextAlign.center),
           ]),
           pw.SizedBox(height: 8),

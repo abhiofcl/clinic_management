@@ -1,22 +1,25 @@
 // import 'package:clinic_management_new/database/firestore_database_helper.dart';
-import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter/material.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class PatientFormPage extends StatelessWidget {
+  const PatientFormPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
       content: Container(
         // color: FluentTheme.of(context).scaffolvvdBackgroundColor,
-        child: PatientInputForm(),
+        child: const PatientInputForm(),
       ),
     );
   }
 }
 
 class PatientInputForm extends StatefulWidget {
+  const PatientInputForm({super.key});
+
   @override
   _PatientInputFormState createState() => _PatientInputFormState();
 }

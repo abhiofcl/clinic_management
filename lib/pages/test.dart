@@ -1,6 +1,4 @@
-import 'package:clinic_management_new/pages/active_pateints.dart';
 import 'package:clinic_management_new/pages/details_ip_new.dart';
-import 'package:clinic_management_new/pages/discharged_patients.dart';
 import 'package:clinic_management_new/patient_details.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 // import 'package:flutter/material.dart';
@@ -32,13 +30,13 @@ class _MyWidgetState extends State<MyWidget> {
     PaneItem(
       icon: const Icon(FluentIcons.home),
       title: const Text('Forms'),
-      body: PatientFormPage(),
+      body: const PatientFormPage(),
     ),
     PaneItemSeparator(),
     PaneItem(
       icon: const Icon(FluentIcons.list),
       title: const Text('Patient List'),
-      body: PatientListPage(),
+      body: const PatientListPage(),
     ),
     // PaneItemSeparator(),
     // PaneItem(
@@ -92,21 +90,9 @@ class _MyWidgetState extends State<MyWidget> {
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      appBar: NavigationAppBar(
-        title: const Text('Shanthi Ayurveda Ashram Patient Record Application'),
-        // actions: Row(
-        //   mainAxisAlignment: MainAxisAlignment.end,
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.only(right: 8.0),
-        //       child: ToggleSwitch(
-        //         checked: widget.isDark,
-        //         onChanged: (value) => widget.toggleTheme(),
-        //         content: Text(widget.isDark ? 'Dark Mode' : 'Light Mode'),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+      appBar: const NavigationAppBar(
+        // backgroundColor: Colors.teal.lighter,
+        title: Text('Shanthi Ayurveda Ashram Patient Record Application'),
       ),
       pane: NavigationPane(
         selected: topIndex,
@@ -150,24 +136,6 @@ class _MyWidgetState extends State<MyWidget> {
         //   ),
         // ],
       ),
-    );
-  }
-}
-
-class _NavigationBodyItem extends StatelessWidget {
-  const _NavigationBodyItem({
-    this.header,
-    this.content,
-  });
-
-  final String? header;
-  final Widget? content;
-
-  @override
-  Widget build(BuildContext context) {
-    return ScaffoldPage.withPadding(
-      header: PageHeader(title: Text(header ?? 'This is a header text')),
-      content: content ?? const SizedBox.shrink(),
     );
   }
 }

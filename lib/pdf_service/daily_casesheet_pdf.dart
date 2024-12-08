@@ -13,18 +13,18 @@ class DailyCaseSheetPDFService {
     final dateFormat = DateFormat('dd-MM-yyyy');
 
     // Create patient info section
-    final patientInfo = [
-      ['Name:', patient.name],
-      // ['IP No:', patient.ipNo],
-      ['Age:', patient.age.toString()],
-      // ['Gender:', patient.gender],
-      // ['Date of Admission:', dateFormat.format(patient.dateOfAdmission)],
-      // ['Diagnosis:', patient.diagnosis],
-    ];
+    // final patientInfo = [
+    //   ['Name:', patient.name],
+    //   // ['IP No:', patient.ipNo],
+    //   ['Age:', patient.age.toString()],
+    //   // ['Gender:', patient.gender],
+    //   // ['Date of Admission:', dateFormat.format(patient.dateOfAdmission)],
+    //   // ['Diagnosis:', patient.diagnosis],
+    // ];
 
     // Create case sheet table data
     final List<List<String>> caseSheetData = [
-      ['Date', 'Symptoms', 'Treatments', 'BP'], // Header row
+      ['Date', 'AM/PM', 'Symptoms', 'Treatments', 'BP'], // Header row
     ];
 
     // Add case sheet entries if they exist
@@ -33,6 +33,7 @@ class DailyCaseSheetPDFService {
         patient.caseSheets!
             .map((entry) => [
                   dateFormat.format(entry.date ?? DateTime.now()),
+                  entry.time ?? '',
                   entry.symptoms ?? '',
                   entry.treatments ?? '',
                   entry.bp ?? '',
@@ -75,23 +76,25 @@ class DailyCaseSheetPDFService {
                       fontWeight: pw.FontWeight.bold,
                       // color: PdfColors.white,
                     ),
-                    headerDecoration: pw.BoxDecoration(
+                    headerDecoration: const pw.BoxDecoration(
                         // color: PdfColors.blue600,
                         ),
                     cellHeight: 20,
-                    cellStyle: pw.TextStyle(fontSize: 10),
+                    cellStyle: const pw.TextStyle(fontSize: 10),
                     cellAlignment: pw.Alignment.centerLeft,
                     columnWidths: {
-                      0: pw.FlexColumnWidth(1), // Date
-                      1: pw.FlexColumnWidth(2), // Symptoms
-                      2: pw.FlexColumnWidth(2), // Treatments
-                      3: pw.FlexColumnWidth(1), // BP
+                      0: const pw.FlexColumnWidth(1), // Date
+                      1: const pw.FlexColumnWidth(1),
+                      2: const pw.FlexColumnWidth(2), // Symptoms
+                      3: const pw.FlexColumnWidth(2), // Treatments
+                      4: const pw.FlexColumnWidth(1), // BP
                     },
                     cellAlignments: {
                       0: pw.Alignment.centerLeft,
-                      1: pw.Alignment.centerLeft,
+                      1: pw.Alignment.center,
                       2: pw.Alignment.centerLeft,
-                      3: pw.Alignment.center,
+                      3: pw.Alignment.centerLeft,
+                      4: pw.Alignment.center,
                     },
                   ),
                   pw.SizedBox(height: 20),
@@ -150,7 +153,8 @@ class DailyCaseSheetPDFService {
           ),
           pw.SizedBox(height: 8),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text('Ariyoor,Venga,Kottoppadom,Mannarkkad,Palakkad',
+            pw.Text(
+                'Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
                 textAlign: pw.TextAlign.center),
           ]),
           pw.SizedBox(height: 8),
@@ -175,87 +179,87 @@ class DailyCaseSheetPDFService {
     );
   }
 
-  static pw.Widget _buildHeader2() {
-    return pw.Container(
-      decoration: pw.BoxDecoration(
-        border: pw.Border(
-          bottom: pw.BorderSide(
-            color: PdfColors.black,
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.SizedBox(height: 10),
-          pw.Text(
-            'Patient Admission Note',
-            style: pw.TextStyle(
-              fontSize: 24,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-        ],
-      ),
-    );
-  }
+  // static pw.Widget _buildHeader2() {
+  //   return pw.Container(
+  //     decoration: const pw.BoxDecoration(
+  //       border: pw.Border(
+  //         bottom: pw.BorderSide(
+  //           color: PdfColors.black,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //     ),
+  //     child: pw.Column(
+  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //       children: [
+  //         pw.SizedBox(height: 10),
+  //         pw.Text(
+  //           'Patient Admission Note',
+  //           style: pw.TextStyle(
+  //             fontSize: 24,
+  //             fontWeight: pw.FontWeight.bold,
+  //           ),
+  //         ),
+  //         pw.SizedBox(height: 10),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  static pw.Widget _buildPatientInfo(Patient patient) {
-    return pw.Container(
-      decoration: pw.BoxDecoration(
-        border: pw.Border(
-          bottom: pw.BorderSide(
-            color: PdfColors.black,
-            width: 1.0,
-          ),
-        ),
-      ),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.SizedBox(height: 20),
-          _buildSection('', [
-            pw.Text(
-              'Mr/Mrs ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Kottopadam,Mannarkkad,Palakkad,Kerala',
-            ),
-            pw.SizedBox(height: 40),
-            pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.end,
-              children: [
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.center,
-                  children: [
-                    pw.Text('Dr.Nisha P'),
-                    pw.Text('Chief physician'),
-                  ],
-                ),
-              ],
-            ),
-            pw.SizedBox(height: 20),
-          ]),
-        ],
-      ),
-    );
-  }
+  // static pw.Widget _buildPatientInfo(Patient patient) {
+  //   return pw.Container(
+  //     decoration: const pw.BoxDecoration(
+  //       border: pw.Border(
+  //         bottom: pw.BorderSide(
+  //           color: PdfColors.black,
+  //           width: 1.0,
+  //         ),
+  //       ),
+  //     ),
+  //     child: pw.Column(
+  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //       children: [
+  //         pw.SizedBox(height: 20),
+  //         _buildSection('', [
+  //           pw.Text(
+  //             'Mr/Mrs ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Kottopadam,Mannarkkad,Palakkad,Kerala',
+  //           ),
+  //           pw.SizedBox(height: 40),
+  //           pw.Row(
+  //             mainAxisAlignment: pw.MainAxisAlignment.end,
+  //             children: [
+  //               pw.Column(
+  //                 crossAxisAlignment: pw.CrossAxisAlignment.center,
+  //                 children: [
+  //                   pw.Text('Dr.Nisha P'),
+  //                   pw.Text('Chief physician'),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //           pw.SizedBox(height: 20),
+  //         ]),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  static pw.Widget _buildSection(String title, List<pw.Widget> children) {
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        if (title.isNotEmpty) ...[
-          pw.Text(
-            title,
-            style: pw.TextStyle(
-              fontSize: 18,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-        ],
-        ...children,
-      ],
-    );
-  }
+  // static pw.Widget _buildSection(String title, List<pw.Widget> children) {
+  //   return pw.Column(
+  //     crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //     children: [
+  //       if (title.isNotEmpty) ...[
+  //         pw.Text(
+  //           title,
+  //           style: pw.TextStyle(
+  //             fontSize: 18,
+  //             fontWeight: pw.FontWeight.bold,
+  //           ),
+  //         ),
+  //         pw.SizedBox(height: 10),
+  //       ],
+  //       ...children,
+  //     ],
+  //   );
+  // }
 }

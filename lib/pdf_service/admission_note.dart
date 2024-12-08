@@ -79,7 +79,8 @@ class AdmissionNotePDFService {
           ),
           pw.SizedBox(height: 8),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text('Ariyoor,Venga,Kottoppadom,Mannarkkad,Palakkad',
+            pw.Text(
+                'Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
                 textAlign: pw.TextAlign.center),
           ]),
           pw.SizedBox(height: 8),
@@ -153,7 +154,7 @@ class AdmissionNotePDFService {
               // height: 5,
               fontSize: 13,
             ),
-            'Mr/Mrs ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Kottopadam,Mannarkkad,Palakkad,Kerala',
+            'Mr/Mrs ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
           ),
           pw.SizedBox(height: 40),
           pw.Row(
@@ -174,22 +175,22 @@ class AdmissionNotePDFService {
     );
   }
 
-  static pw.Widget _buildSection(String title, List<pw.Widget> children) {
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        if (title.isNotEmpty) ...[
-          pw.Text(
-            title,
-            style: pw.TextStyle(
-              fontSize: 18,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-        ],
-        ...children,
-      ],
-    );
-  }
+  // static pw.Widget _buildSection(String title, List<pw.Widget> children) {
+  //   return pw.Column(
+  //     crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //     children: [
+  //       if (title.isNotEmpty) ...[
+  //         pw.Text(
+  //           title,
+  //           style: pw.TextStyle(
+  //             fontSize: 18,
+  //             fontWeight: pw.FontWeight.bold,
+  //           ),
+  //         ),
+  //         pw.SizedBox(height: 10),
+  //       ],
+  //       ...children,
+  //     ],
+  //   );
+  // }
 }

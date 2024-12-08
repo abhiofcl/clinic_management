@@ -46,21 +46,28 @@ class Patient extends HiveObject {
 
   @HiveField(13)
   String history;
+
   @HiveField(14)
   String heartRate;
 
   @HiveField(15)
   String weight;
+
   @HiveField(16)
   String height;
+
   @HiveField(17)
   String diet;
+
   @HiveField(18)
   String apetite;
+
   @HiveField(19)
   String bowel;
+
   @HiveField(20)
   String sleep;
+
   @HiveField(21)
   String urine;
 
@@ -75,20 +82,31 @@ class Patient extends HiveObject {
 
   @HiveField(25)
   List<MedicationsEntry>? medicationsEntry;
+
   @HiveField(26)
   String? status;
+
   @HiveField(27)
   String? condition;
+
   @HiveField(28)
   String? adice;
+
   @HiveField(29)
   String? otherMedication;
+
   @HiveField(30)
   String? treatment;
+
   @HiveField(31)
   double totalBill = 0.0;
+
   @HiveField(32)
   int days = 1;
+
+  @HiveField(33)
+  String billNo = "";
+
   Patient({
     required this.name,
     required this.age,
@@ -122,18 +140,25 @@ class Patient extends HiveObject {
 class CaseSheetEntry extends HiveObject {
   @HiveField(0)
   DateTime? date;
+
   @HiveField(1)
   String? symptoms;
+
   @HiveField(2)
   String? treatments;
+
   @HiveField(3)
   String? bp;
+
+  @HiveField(4)
+  String? time;
 
   CaseSheetEntry({
     this.date,
     this.symptoms,
     this.treatments,
     this.bp,
+    this.time,
   });
 }
 
@@ -141,12 +166,16 @@ class CaseSheetEntry extends HiveObject {
 class BillEntry extends HiveObject {
   @HiveField(0)
   double? price;
+
   @HiveField(1)
   String? particulars;
+
   @HiveField(2)
   String? quantity;
+
   @HiveField(3)
   String? rate;
+
   // @HiveField(3)
   // String? bp;
 
@@ -162,6 +191,7 @@ class BillEntry extends HiveObject {
 class MedicationsEntry extends HiveObject {
   @HiveField(0)
   String? name;
+
   @HiveField(1)
   double? quantity;
 

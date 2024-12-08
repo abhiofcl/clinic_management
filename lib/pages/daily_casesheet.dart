@@ -15,14 +15,8 @@ class CaseSheetWidget extends StatefulWidget {
 }
 
 class _CaseSheetWidgetState extends State<CaseSheetWidget> {
-  final TextEditingController _treatmentController = TextEditingController();
-  final TextEditingController _symptomsController = TextEditingController();
-  // final TextEditingController _dateController = TextEditingController();
-  DateTime _dateOfAdmission = DateTime.now();
-  final TextEditingController _bpController = TextEditingController();
   late Box<Patient> patientBox;
   late Patient? patienT;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -33,36 +27,28 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
   }
 
   // Future<void> _initializeHiveDatas() async {
-  //   patientBox = Hive.box<Patient>('patients4');
+  //   patientBox = Hive.box<Patient>('patients4_1');
   //   patienT = patientBox.get(widget.index);
   // }
 
   Future<void> _initializeHive() async {
-    print("Starting");
+    // print("Starting");
     try {
-      print("Trying");
-      if (!Hive.isBoxOpen('patients4')) {
-        patientBox = await Hive.openBox<Patient>('patients4');
-        print("Opening");
+      // print("Trying");
+      if (!Hive.isBoxOpen('patients4_1')) {
+        patientBox = await Hive.openBox<Patient>('patients4_1');
+        // print("Opening");
       } else {
-        patientBox = Hive.box<Patient>('patients4');
-        print("found");
+        patientBox = Hive.box<Patient>('patients4_1');
+        // print("found");
       }
     } catch (e) {
       print('Error opening Hive box: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
   @override
   void dispose() {
-    _treatmentController.dispose();
-    _symptomsController.dispose();
-    // _dateController.dispose();
-    _bpController.dispose();
     super.dispose();
   }
 
@@ -92,19 +78,23 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                     onPressed: () =>
                         _showNewDialog(context, widget.patient, widget.index)),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 16,
               ),
               SizedBox(
                 width: 100,
                 child: FilledButton(
-                    child: const Row(
-                      children: [
-                        // Icon(FluentIcons.arrow_down_right8),
-                        Text("Reload")
-                      ],
-                    ),
-                    onPressed: () => _initializeHive()),
+                  child: const Row(
+                    children: [
+                      // Icon(FluentIcons.arrow_down_right8),
+                      Text("Reload")
+                    ],
+                  ),
+                  onPressed: () {
+                    patientBox = Hive.box<Patient>('patients4_1');
+                    setState(() {});
+                  },
+                ),
               ),
             ],
           ),
@@ -118,14 +108,19 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                       .dividerStrokeColorDefault,
                 ),
                 children: [
-                  TableRow(
+                  const TableRow(
                     decoration: BoxDecoration(
                         // color: FluentTheme.of(context).resources.accentBackgroundColor,
                         ),
-                    children: const [
+                    children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text('Date',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('AM/PM',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       Padding(
@@ -153,6 +148,10 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(DateFormat('dd/MM/yyyy').format(
                                         caseSheet.date ?? DateTime.now())),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(caseSheet.time ?? '-'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -204,7 +203,8 @@ class NewWidgetDialog extends StatefulWidget {
 class _NewWidgetDialogState extends State<NewWidgetDialog> {
   final TextEditingController _treatmentController = TextEditingController();
   final TextEditingController _symptomsController = TextEditingController();
-
+  final TextEditingController _timeController = TextEditingController();
+  String _time = "AM";
   DateTime _dateOfCheck = DateTime.now();
   final TextEditingController _bpController = TextEditingController();
 
@@ -217,10 +217,14 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
 
       final treatments = _treatmentController.text;
       final bp = _bpController.text;
+      // final time = _timeController.text;
       final caseSheet = CaseSheetEntry(
-          date: _dateOfCheck, symptoms: symptoms, treatments: treatments, bp: bp
-          // bp:bp,
-          );
+        date: _dateOfCheck,
+        symptoms: symptoms,
+        treatments: treatments,
+        bp: bp,
+        time: _time,
+      );
 
       patient.caseSheets = [...?patient.caseSheets, caseSheet];
       await patient.save();
@@ -231,9 +235,10 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       _bpController.clear();
       _symptomsController.clear();
       _treatmentController.clear();
+      _timeController.clear();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4');
+        patientBox = Hive.box<Patient>('patients4_1');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -257,6 +262,25 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
                 onChanged: (date) {
                   setState(() {
                     _dateOfCheck = date;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Time slot',
+              child: ComboBox<String>(
+                value: _time,
+                placeholder: const Text('Select time slot'),
+                items: ['AM', 'PM']
+                    .map((e) => ComboBoxItem<String>(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _time = value!;
                   });
                 },
               ),
@@ -303,7 +327,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4');
+            final box = Hive.box<Patient>('patients4_1');
             await saveCaseSheet(box);
             // await box.putAt(widget.index, widget.patient);
 

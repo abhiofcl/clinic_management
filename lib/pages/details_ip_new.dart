@@ -10,6 +10,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PatientFormPage extends StatelessWidget {
+  const PatientFormPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScaffoldPage(
@@ -20,32 +22,34 @@ class PatientFormPage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => PatientListPage(),
+                  builder: (context) => const PatientListPage(),
                 ),
               );
             },
-            child: Text('Show All'),
+            child: const Text('Show All'),
           ),
           ElevatedButton(
             onPressed: () async {
               await DatabaseCleanup.cleanDatabase();
               // Optionally show a success message
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Database reset successfully')),
+                const SnackBar(content: Text('Database reset successfully')),
               );
             },
-            child: Text('Reset Database'),
+            child: const Text('Reset Database'),
           ),
         ],
       ),
       content: Container(
-        child: PatientInputForm(),
+        child: const PatientInputForm(),
       ),
     );
   }
 }
 
 class PatientInputForm extends StatefulWidget {
+  const PatientInputForm({super.key});
+
   @override
   _PatientInputFormState createState() => _PatientInputFormState();
 }
@@ -131,7 +135,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
       status: "active",
     );
 
-    final box = await Hive.openBox<Patient>('patients4');
+    final box = await Hive.openBox<Patient>('patients4_1');
     await box.add(patient);
 
     // Show success message
@@ -475,7 +479,7 @@ class DatabaseCleanup {
       Hive.registerAdapter(PatientAdapter());
 
       // 8. Reopen boxes
-      await Hive.openBox<Patient>('patients4');
+      await Hive.openBox<Patient>('patients4_1');
 
       print('Database cleanup completed successfully');
     } catch (e) {

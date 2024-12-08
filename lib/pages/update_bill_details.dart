@@ -2,7 +2,6 @@
 import 'package:clinic_management_new/database/patient.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 
 class BillUpdateWidget extends StatefulWidget {
   final Patient patient;
@@ -23,7 +22,6 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
 
   late Box<Patient> patientBox;
   late Patient? patienT;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -33,28 +31,19 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
     // print(patienT?.caseSheets);
   }
 
-  // Future<void> _initializeHiveDatas() async {
-  //   patientBox = Hive.box<Patient>('patients4');
-  //   patienT = patientBox.get(widget.index);
-  // }
-
   Future<void> _initializeHive() async {
     // print("Starting");
     try {
       // print("Trying");
-      if (!Hive.isBoxOpen('patients4')) {
-        patientBox = await Hive.openBox<Patient>('patients4');
+      if (!Hive.isBoxOpen('patients4_1')) {
+        patientBox = await Hive.openBox<Patient>('patients4_1');
         // print("Opening");
       } else {
-        patientBox = Hive.box<Patient>('patients4');
+        patientBox = Hive.box<Patient>('patients4_1');
         // print("found");
       }
     } catch (e) {
       debugPrint('Error opening Hive box: $e');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
     }
   }
 
@@ -105,7 +94,10 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                         Text("Reload")
                       ],
                     ),
-                    onPressed: () => _initializeHive()),
+                    onPressed: () {
+                      patientBox = Hive.box<Patient>('patients4_1');
+                      setState(() {});
+                    }),
               ),
             ],
           ),
@@ -136,6 +128,11 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                       ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
+                        child: Text('Rate',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
                         child: Text('Qty',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
@@ -153,6 +150,10 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(billRecord.particulars ?? '-'),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(billRecord.rate ?? '-'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -235,7 +236,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       _rateController.clear();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4');
+        patientBox = Hive.box<Patient>('patients4_1');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -301,7 +302,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4');
+            final box = Hive.box<Patient>('patients4_1');
             await saveCaseSheet(box);
             // await box.putAt(widget.index, widget.patient);
 

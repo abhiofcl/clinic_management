@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:clinic_management_new/database/patient.dart';
 import 'package:clinic_management_new/pages/daily_casesheet.dart';
 import 'package:clinic_management_new/pages/medicine_page.dart';
@@ -8,10 +6,9 @@ import 'package:clinic_management_new/pdf_service/admission_note.dart';
 import 'package:clinic_management_new/pdf_service/bill_table.dart';
 import 'package:clinic_management_new/pdf_service/daily_casesheet_pdf.dart';
 import 'package:clinic_management_new/pdf_service/discharge_summary.dart';
-import 'package:clinic_management_new/pdf_service/pdfservice.dart';
 import 'package:clinic_management_new/pdf_service/receipt.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PatientListPage extends StatefulWidget {
@@ -33,10 +30,10 @@ class _PatientListPageState extends State<PatientListPage> {
 
   Future<void> _initializeHive() async {
     try {
-      if (!Hive.isBoxOpen('patients4')) {
-        _patientBox = await Hive.openBox<Patient>('patients4');
+      if (!Hive.isBoxOpen('patients4_1')) {
+        _patientBox = await Hive.openBox<Patient>('patients4_1');
       } else {
-        _patientBox = Hive.box<Patient>('patients4');
+        _patientBox = Hive.box<Patient>('patients4_1');
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -51,8 +48,8 @@ class _PatientListPageState extends State<PatientListPage> {
   Widget build(BuildContext context) {
     return NavigationView(
       content: ScaffoldPage(
-        header: PageHeader(
-          title: const Text('Patient Records'),
+        header: const PageHeader(
+          title: Text('Patient Records'),
           // commandBar: Row(
           //   mainAxisSize: MainAxisSize.min,
           //   children: [
@@ -80,8 +77,8 @@ class _PatientListPageState extends State<PatientListPage> {
             const Text('Error loading patient records'),
             const SizedBox(height: 16),
             FilledButton(
-              child: const Text('Retry'),
               onPressed: _initializeHive,
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -112,7 +109,7 @@ class _PatientListPageState extends State<PatientListPage> {
                   child: const Text('Add Patient'),
                   onPressed: () {
                     // Navigate to add patient page
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
                   },
                 ),
               ],
@@ -128,7 +125,7 @@ class _PatientListPageState extends State<PatientListPage> {
             if (patient == null) return const SizedBox.shrink();
 
             return Card(
-              backgroundColor: Colors.grey,
+              backgroundColor: const Color.fromARGB(255, 200, 145, 90),
               margin: const EdgeInsets.only(bottom: 16),
               child: Expander(
                 header: Text(patient.name,
@@ -199,17 +196,17 @@ class _PatientListPageState extends State<PatientListPage> {
                                     ),
                                 const SizedBox(width: 8),
                                 FilledButton(
-                                  child: const Row(
-                                    children: [
-                                      Icon(FluentIcons.pdf),
-                                      SizedBox(width: 8),
-                                      Text('Bill Table'),
-                                    ],
-                                  ),
-                                  onPressed: () =>
-                                      // _showBillDialog(context, patient, index)
-                                      _generateBillTableSheetPDF(patient),
-                                ),
+                                    child: const Row(
+                                      children: [
+                                        Icon(FluentIcons.pdf),
+                                        SizedBox(width: 8),
+                                        Text('Bill Table'),
+                                      ],
+                                    ),
+                                    onPressed: () =>
+                                        // _showBillDialog(context, patient, index)
+                                        _showBillTableDialog(
+                                            context, patient, index)),
                               ],
                             ),
                           ],
@@ -264,17 +261,18 @@ class _PatientListPageState extends State<PatientListPage> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Row(
                               children: [
                                 const SizedBox(width: 8),
                                 FilledButton(
-                                  child: const Text('Edit'),
-                                  onPressed: () =>
-                                      _showEditDialog(context, patient, index),
-                                ),
+                                    child: const Text('Edit'),
+                                    onPressed: () =>
+                                        _showNewDialog(context, patient, index)
+                                    // _showEditDialog(context, patient, index),
+                                    ),
                                 const SizedBox(width: 8),
                                 Button(
                                   child: const Text('Delete'),
@@ -364,7 +362,7 @@ class _PatientListPageState extends State<PatientListPage> {
             ),
             child: const Text('Delete'),
             onPressed: () async {
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.deleteAt(index);
               Navigator.pop(context);
               displayInfoBar(
@@ -395,6 +393,11 @@ class _PatientListPageState extends State<PatientListPage> {
     final occupationController =
         TextEditingController(text: patient.occupation);
     final addressController = TextEditingController(text: patient.address);
+    final ageController = TextEditingController(text: patient.age.toString());
+    final dischargeController =
+        TextEditingController(text: patient.dateOfDischarge.toString());
+    final admissionController =
+        TextEditingController(text: patient.dateOfAdmission.toString());
     // ... add other controllers as needed
 
     await showDialog<String>(
@@ -429,6 +432,30 @@ class _PatientListPageState extends State<PatientListPage> {
                 ),
               ),
               // Add other fields as needed
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: 'Age',
+                child: TextFormBox(
+                  controller: occupationController,
+                  placeholder: 'Enter occupation',
+                ),
+              ),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: 'Occupation',
+                child: TextFormBox(
+                  controller: occupationController,
+                  placeholder: 'Enter occupation',
+                ),
+              ),
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: 'Occupation',
+                child: TextFormBox(
+                  controller: occupationController,
+                  placeholder: 'Enter occupation',
+                ),
+              ),
             ],
           ),
         ),
@@ -447,7 +474,7 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.putAt(index, patient);
 
               if (context.mounted) {
@@ -487,6 +514,7 @@ class _PatientListPageState extends State<PatientListPage> {
     final treatmentController = TextEditingController(text: patient.treatment);
     final medicationController =
         TextEditingController(text: patient.otherMedication);
+    DateTime dateOfDischarge = patient.dateOfDischarge;
     // ... add other controllers as needed
 
     await showDialog<String>(
@@ -497,6 +525,19 @@ class _PatientListPageState extends State<PatientListPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 10),
+              InfoLabel(
+                label: 'Date of Discharge',
+                child: DatePicker(
+                  selected: dateOfDischarge,
+                  onChanged: (date) {
+                    setState(() {
+                      dateOfDischarge = date;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(height: 10),
               InfoLabel(
                 label: 'Treatments given',
                 child: TextFormBox(
@@ -587,11 +628,12 @@ class _PatientListPageState extends State<PatientListPage> {
               patient.otherMedication = medicationController.text;
               patient.condition = conditionController.text;
               patient.treatment = treatmentController.text;
+              patient.dateOfDischarge = dateOfDischarge;
 
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.putAt(index, patient);
               await _generateDischargeSheetPDF(patient);
               if (context.mounted) {
@@ -657,9 +699,65 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4');
+              final box = Hive.box<Patient>('patients4_1');
               await box.putAt(index, patient);
               await _generateReceiptPDF(patient);
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showBillTableDialog(
+      BuildContext context, Patient patient, int index) async {
+    // Create controllers with existing values
+    final billNoController = TextEditingController(text: patient.billNo);
+
+    // ... add other controllers as needed
+
+    await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Total Bill Table'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              InfoLabel(
+                label: 'Bill Number',
+                child: TextFormBox(
+                  controller: billNoController,
+                  // initialValue: billNoControlsler.text ?? "",
+                  placeholder: 'Enter Bill Number',
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Button(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            child: const Text('Generate'),
+            onPressed: () async {
+              // Update patient object
+
+              patient.billNo = billNoController.text;
+              // patient.days = int.parse(totalDaysController.text);
+              // Update other fields...
+
+              // Save to Hive
+              final box = Hive.box<Patient>('patients4_1');
+              await box.putAt(index, patient);
+              await _generateBillTableSheetPDF(patient);
+              // await _generateReceiptPDF(patient);
               if (context.mounted) {
                 Navigator.pop(context);
               }
@@ -759,5 +857,263 @@ class _PatientListPageState extends State<PatientListPage> {
       _patientBox!.close();
     }
     super.dispose();
+  }
+}
+
+Future<void> _showNewDialog(
+    BuildContext context, Patient patient, int index) async {
+  await showDialog<String>(
+    context: context,
+    builder: (context) => NewWidgetDialog(patient: patient, index: index),
+  );
+}
+
+class NewWidgetDialog extends StatefulWidget {
+  final Patient patient;
+  final int index;
+  const NewWidgetDialog({
+    super.key,
+    required this.patient,
+    required this.index,
+  });
+
+  @override
+  State<NewWidgetDialog> createState() => _NewWidgetDialogState();
+}
+
+class _NewWidgetDialogState extends State<NewWidgetDialog> {
+  late final TextEditingController nameController;
+  late final TextEditingController occupationController;
+  late final TextEditingController addressController;
+  late final TextEditingController ageController;
+  late final TextEditingController dischargeController;
+  late final TextEditingController admissionController;
+  late final DateTime dateOfAdmission;
+  late final DateTime dateOfDischarge;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the controller in initState
+    nameController = TextEditingController(text: widget.patient.name);
+    occupationController =
+        TextEditingController(text: widget.patient.occupation);
+
+    addressController = TextEditingController(text: widget.patient.address);
+
+    ageController = TextEditingController(text: widget.patient.age.toString());
+
+    dischargeController =
+        TextEditingController(text: widget.patient.dateOfDischarge.toString());
+    admissionController =
+        TextEditingController(text: widget.patient.dateOfAdmission.toString());
+    dateOfDischarge = widget.patient.dateOfDischarge;
+    dateOfAdmission = widget.patient.dateOfAdmission;
+  }
+
+  @override
+  void dispose() {
+    // Don't forget to dispose of controllers to prevent memory leaks
+    nameController.dispose();
+    ageController.dispose();
+    occupationController.dispose();
+    addressController.dispose();
+    dischargeController.dispose();
+    admissionController.dispose();
+    super.dispose();
+  }
+
+  Future<void> saveCaseSheet(Box<Patient> patientBox, int index) async {
+    // print("STARTED");
+    Patient? patient = patientBox.get(widget.index);
+    // print(patient);
+    if (patient != null) {
+      // final symptoms = _symptomsController.text;
+
+      // final treatments = _treatmentController.text;
+      // final bp = _bpController.text;
+      // // final time = _timeController.text;
+      // final caseSheet = CaseSheetEntry(
+      //   date: _dateOfCheck,
+      //   symptoms: symptoms,
+      //   treatments: treatments,
+      //   bp: bp,
+      //   time: _time,
+      // );
+      // Update patient object
+      patient.name = nameController.text;
+      patient.occupation = occupationController.text;
+      patient.address = addressController.text;
+      patient.age = int.parse(ageController.text);
+      patient.dateOfAdmission = dateOfAdmission;
+      patient.dateOfDischarge = dateOfDischarge;
+      // Update other fields...
+
+      // Save to Hive
+      final box = Hive.box<Patient>('patients4_1');
+      await box.putAt(index, patient);
+
+      if (context.mounted) {
+        Navigator.pop(context);
+        displayInfoBar(
+          context,
+          builder: (context, close) {
+            return InfoBar(
+              title: const Text('Success'),
+              content: const Text('Patient record updated successfully'),
+              severity: InfoBarSeverity.success,
+              action: IconButton(
+                icon: const Icon(FluentIcons.clear),
+                onPressed: close,
+              ),
+            );
+          },
+        );
+      }
+
+      // patient.caseSheets = [...?patient.caseSheets, caseSheet];
+      await patient.save();
+
+      // print(patient);
+      // print(caseSheet);
+
+      // _bpController.clear();
+      // _symptomsController.clear();
+      // _treatmentController.clear();
+      // _timeController.clear();
+      nameController.dispose();
+      ageController.dispose();
+      occupationController.dispose();
+      addressController.dispose();
+      dischargeController.dispose();
+      admissionController.dispose();
+
+      setState(() {
+        patientBox = Hive.box<Patient>('patients4_1');
+        patient = patientBox.get(widget.index);
+      });
+      // _initializeHiveDatas();
+    } else {
+      // print("ERROR");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentDialog(
+      title: const Text('Add Daily Case Sheet Record'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InfoLabel(
+              label: 'Name',
+              child: TextFormBox(
+                controller: nameController,
+                placeholder: 'Enter full name',
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'Occupation',
+              child: TextFormBox(
+                controller: occupationController,
+                placeholder: 'Enter occupation',
+              ),
+            ),
+            InfoLabel(
+              label: 'Address',
+              child: TextFormBox(
+                controller: addressController,
+                placeholder: 'Enter address',
+                maxLines: 3,
+              ),
+            ),
+            // Add other fields as needed
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'Age',
+              child: TextFormBox(
+                controller: ageController,
+                placeholder: 'Enter Age',
+              ),
+            ),
+            const SizedBox(height: 8),
+            InfoLabel(
+              label: 'Date of Admission',
+              child: DatePicker(
+                selected: dateOfAdmission,
+                onChanged: (date) {
+                  setState(() {
+                    dateOfAdmission = date;
+                  });
+                },
+              ),
+            ),
+            InfoLabel(
+              label: 'Date of Discharge',
+              child: DatePicker(
+                selected: dateOfDischarge,
+                onChanged: (date) {
+                  setState(() {
+                    dateOfDischarge = date;
+                  });
+                },
+              ),
+            ),
+            // Add other fields as needed
+          ],
+        ),
+      ),
+      actions: [
+        Button(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context),
+        ),
+        FilledButton(
+          child: const Text('Save'),
+          onPressed: () async {
+            final box = Hive.box<Patient>('patients4_1');
+            await saveCaseSheet(box, widget.index);
+            // await box.putAt(widget.index, widget.patient);
+
+            if (context.mounted) {
+              Navigator.pop(context);
+              displayInfoBar(
+                context,
+                builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('Success'),
+                    content: const Text('Patient record updated successfully'),
+                    severity: InfoBarSeverity.success,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  );
+                },
+              );
+            }
+            if (context.mounted) {
+              Navigator.pop(context);
+              displayInfoBar(
+                context,
+                builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('Success'),
+                    content: const Text('Case Sheet updated successfully'),
+                    severity: InfoBarSeverity.success,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
+      ],
+    );
   }
 }
