@@ -16,31 +16,19 @@ class CaseSheetWidget extends StatefulWidget {
 
 class _CaseSheetWidgetState extends State<CaseSheetWidget> {
   late Box<Patient> patientBox;
-  late Patient? patienT;
 
   @override
   void initState() {
     super.initState();
     _initializeHive();
-    // _initializeHiveDatas();
-    // print(patienT?.caseSheets);
   }
 
-  // Future<void> _initializeHiveDatas() async {
-  //   patientBox = Hive.box<Patient>('patients4_1');
-  //   patienT = patientBox.get(widget.index);
-  // }
-
   Future<void> _initializeHive() async {
-    // print("Starting");
     try {
-      // print("Trying");
       if (!Hive.isBoxOpen('patients4_1')) {
         patientBox = await Hive.openBox<Patient>('patients4_1');
-        // print("Opening");
       } else {
         patientBox = Hive.box<Patient>('patients4_1');
-        // print("found");
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -48,15 +36,10 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return NavigationView(
       appBar: NavigationAppBar(
-        title: Text("Daily Case cheet of ${widget.patient.name}"),
+        title: Text("Daily Case Sheet of ${widget.patient.name}"),
       ),
       content: Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 10, 10),
@@ -66,29 +49,23 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
               SizedBox(
                 width: 100,
                 child: FilledButton(
-                    child: const Row(
-                      children: [
-                        Icon(FluentIcons.add),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("New")
-                      ],
-                    ),
-                    onPressed: () =>
-                        _showNewDialog(context, widget.patient, widget.index)),
+                  child: const Row(
+                    children: [
+                      Icon(FluentIcons.add),
+                      SizedBox(width: 8),
+                      Text("New")
+                    ],
+                  ),
+                  onPressed: () =>
+                      _showNewDialog(context, widget.patient, widget.index),
+                ),
               ),
-              const SizedBox(
-                width: 16,
-              ),
+              const SizedBox(width: 16),
               SizedBox(
                 width: 100,
                 child: FilledButton(
                   child: const Row(
-                    children: [
-                      // Icon(FluentIcons.arrow_down_right8),
-                      Text("Reload")
-                    ],
+                    children: [Text("Reload")],
                   ),
                   onPressed: () {
                     patientBox = Hive.box<Patient>('patients4_1');
@@ -109,9 +86,6 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                 ),
                 children: [
                   const TableRow(
-                    decoration: BoxDecoration(
-                        // color: FluentTheme.of(context).resources.accentBackgroundColor,
-                        ),
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0),
@@ -138,36 +112,60 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                         child: Text('Treatment',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Actions',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
                     ],
                   ),
-                  // Data Rows
-                  ...widget.patient.caseSheets
-                          ?.map((caseSheet) => TableRow(
+                  ...widget.patient.caseSheets?.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final caseSheet = entry.value;
+                        return TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(DateFormat('dd/MM/yyyy')
+                                  .format(caseSheet.date ?? DateTime.now())),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(caseSheet.time ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(caseSheet.bp ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(caseSheet.symptoms ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(caseSheet.treatments ?? ''),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(DateFormat('dd/MM/yyyy').format(
-                                        caseSheet.date ?? DateTime.now())),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.edit),
+                                    onPressed: () => _showEditDialog(context,
+                                        widget.patient, widget.index, index),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(caseSheet.time ?? '-'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(caseSheet.bp ?? '-'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(caseSheet.symptoms ?? '-'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(caseSheet.treatments ?? ""),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.delete),
+                                    onPressed: () => _deleteCaseSheet(index),
                                   ),
                                 ],
-                              ))
-                          .toList() ??
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList() ??
                       [],
                 ],
               ),
@@ -177,23 +175,86 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
       ),
     );
   }
-}
 
-Future<void> _showNewDialog(
-    BuildContext context, Patient patient, int index) async {
-  await showDialog<String>(
-    context: context,
-    builder: (context) => NewWidgetDialog(patient: patient, index: index),
-  );
+  Future<void> _showNewDialog(
+      BuildContext context, Patient patient, int index) async {
+    await showDialog<String>(
+      context: context,
+      builder: (context) => NewWidgetDialog(patient: patient, index: index),
+    );
+  }
+
+  Future<void> _showEditDialog(BuildContext context, Patient patient,
+      int patientIndex, int caseSheetIndex) async {
+    final caseSheet = patient.caseSheets?[caseSheetIndex];
+    if (caseSheet != null) {
+      await showDialog<String>(
+        context: context,
+        builder: (context) => NewWidgetDialog(
+          patient: patient,
+          index: patientIndex,
+          initialCaseSheet: caseSheet,
+          caseSheetIndex: caseSheetIndex,
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteCaseSheet(int caseSheetIndex) async {
+    showDialog(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text(
+            'Are you sure you want to delete this case sheet entry?'),
+        actions: [
+          Button(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.pop(context);
+              setState(() {
+                widget.patient.caseSheets?.removeAt(caseSheetIndex);
+              });
+              await widget.patient.save();
+              displayInfoBar(
+                context,
+                builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('Deleted'),
+                    content:
+                        const Text('Case sheet entry deleted successfully'),
+                    severity: InfoBarSeverity.warning,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class NewWidgetDialog extends StatefulWidget {
   final Patient patient;
   final int index;
+  final CaseSheetEntry? initialCaseSheet;
+  final int? caseSheetIndex;
+
   const NewWidgetDialog({
     super.key,
     required this.patient,
     required this.index,
+    this.initialCaseSheet,
+    this.caseSheetIndex,
   });
 
   @override
@@ -201,23 +262,31 @@ class NewWidgetDialog extends StatefulWidget {
 }
 
 class _NewWidgetDialogState extends State<NewWidgetDialog> {
-  final TextEditingController _treatmentController = TextEditingController();
-  final TextEditingController _symptomsController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+  late TextEditingController _treatmentController;
+  late TextEditingController _symptomsController;
+  late TextEditingController _bpController;
   String _time = "AM";
-  DateTime _dateOfCheck = DateTime.now();
-  final TextEditingController _bpController = TextEditingController();
+  late DateTime _dateOfCheck;
+
+  @override
+  void initState() {
+    super.initState();
+    _treatmentController =
+        TextEditingController(text: widget.initialCaseSheet?.treatments ?? "");
+    _symptomsController =
+        TextEditingController(text: widget.initialCaseSheet?.symptoms ?? "");
+    _bpController =
+        TextEditingController(text: widget.initialCaseSheet?.bp ?? "");
+    _time = widget.initialCaseSheet?.time ?? "AM";
+    _dateOfCheck = widget.initialCaseSheet?.date ?? DateTime.now();
+  }
 
   Future<void> saveCaseSheet(Box<Patient> patientBox) async {
-    // print("STARTED");
     Patient? patient = patientBox.get(widget.index);
-    // print(patient);
     if (patient != null) {
       final symptoms = _symptomsController.text;
-
       final treatments = _treatmentController.text;
       final bp = _bpController.text;
-      // final time = _timeController.text;
       final caseSheet = CaseSheetEntry(
         date: _dateOfCheck,
         symptoms: symptoms,
@@ -226,31 +295,28 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         time: _time,
       );
 
-      patient.caseSheets = [...?patient.caseSheets, caseSheet];
+      if (widget.caseSheetIndex != null) {
+        // Editing an existing case sheet
+        patient.caseSheets?[widget.caseSheetIndex!] = caseSheet;
+      } else {
+        // Adding a new case sheet
+        patient.caseSheets = [...?patient.caseSheets, caseSheet];
+      }
+
       await patient.save();
-
-      // print(patient);
-      // print(caseSheet);
-
-      _bpController.clear();
-      _symptomsController.clear();
-      _treatmentController.clear();
-      _timeController.clear();
-
       setState(() {
         patientBox = Hive.box<Patient>('patients4_1');
         patient = patientBox.get(widget.index);
       });
-      // _initializeHiveDatas();
-    } else {
-      // print("ERROR");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: const Text('Add Daily Case Sheet Record'),
+      title: Text(widget.caseSheetIndex != null
+          ? 'Edit Case Sheet Entry'
+          : 'Add Daily Case Sheet Record'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -295,7 +361,6 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
               ),
             ),
             const SizedBox(height: 8),
-            const SizedBox(height: 10),
             InfoLabel(
               label: 'Symptoms',
               child: TextFormBox(
@@ -305,17 +370,13 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
               ),
             ),
             const SizedBox(height: 10),
-            Container(
-              width: 300,
-              child: InfoLabel(
-                label: 'BP',
-                child: TextFormBox(
-                  controller: _bpController,
-                  placeholder: 'Enter bp',
-                ),
+            InfoLabel(
+              label: 'BP',
+              child: TextFormBox(
+                controller: _bpController,
+                placeholder: 'Enter BP',
               ),
             ),
-            // Add other fields as needed
           ],
         ),
       ),
@@ -329,7 +390,6 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
           onPressed: () async {
             final box = Hive.box<Patient>('patients4_1');
             await saveCaseSheet(box);
-            // await box.putAt(widget.index, widget.patient);
 
             if (context.mounted) {
               Navigator.pop(context);

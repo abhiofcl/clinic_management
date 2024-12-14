@@ -15,7 +15,7 @@ class MedicineUpdateWidget extends StatefulWidget {
 
 class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
   late Box<Patient> patientBox;
-  late Patient? patienT;
+  // late Patient? patienT;
 
   @override
   void initState() {
@@ -109,30 +109,48 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
                         child: Text('Name',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.all(8.0),
-                      //   child: Text('Qty',
-                      //       style: TextStyle(fontWeight: FontWeight.bold)),
-                      // ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Actions',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
                     ],
                   ),
                   // Data Rows
                   ...widget.patient.medicationsEntry
-                          ?.map((medicineRecord) => TableRow(
+                          ?.asMap()
+                          .entries
+                          .map((entry) {
+                        final index = entry.key;
+                        final medicineRecord = entry.value;
+                        return TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(medicineRecord.name ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(medicineRecord.name ?? '-'),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.edit),
+                                    onPressed: () => _showEditDialog(context,
+                                        widget.patient, widget.index, index),
                                   ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.all(8.0),
-                                  //   child: Text(
-                                  //       medicineRecord.quantity.toString() ??
-                                  //           '-'),
-                                  // ),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.delete),
+                                    onPressed: () =>
+                                        _deleteMedicineRecord(index),
+                                  ),
                                 ],
-                              ))
-                          .toList() ??
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList() ??
                       [],
                 ],
               ),
@@ -142,23 +160,84 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
       ),
     );
   }
-}
 
-Future<void> _showNewDialog(
-    BuildContext context, Patient patient, int index) async {
-  await showDialog<String>(
-    context: context,
-    builder: (context) => NewWidgetDialog(patient: patient, index: index),
-  );
+  Future<void> _deleteMedicineRecord(int medicineIndex) async {
+    showDialog(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Confirm Deletion'),
+        content:
+            const Text('Are you sure you want to delete this medicine entry?'),
+        actions: [
+          Button(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.pop(context);
+              setState(() {
+                widget.patient.medicationsEntry?.removeAt(medicineIndex);
+              });
+              await widget.patient.save();
+              displayInfoBar(
+                context,
+                builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('Deleted'),
+                    content: const Text('Medicine entry deleted successfully'),
+                    severity: InfoBarSeverity.warning,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showEditDialog(BuildContext context, Patient patient,
+      int patientIndex, int medicineIndex) async {
+    final medicineRecord = patient.medicationsEntry?[medicineIndex];
+    if (medicineRecord != null) {
+      await showDialog<String>(
+        context: context,
+        builder: (context) => NewWidgetDialog(
+          patient: patient,
+          index: patientIndex,
+          initialMedicineEntry: medicineRecord,
+          medicineIndex: medicineIndex,
+        ),
+      );
+    }
+  }
+
+  Future<void> _showNewDialog(
+      BuildContext context, Patient patient, int index) async {
+    await showDialog<String>(
+      context: context,
+      builder: (context) => NewWidgetDialog(patient: patient, index: index),
+    );
+  }
 }
 
 class NewWidgetDialog extends StatefulWidget {
   final Patient patient;
   final int index;
+  final MedicationsEntry? initialMedicineEntry;
+  final int? medicineIndex;
   const NewWidgetDialog({
     super.key,
     required this.patient,
     required this.index,
+    this.initialMedicineEntry,
+    this.medicineIndex,
   });
 
   @override
@@ -166,11 +245,14 @@ class NewWidgetDialog extends StatefulWidget {
 }
 
 class _NewWidgetDialogState extends State<NewWidgetDialog> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  // final TextEditingController _quantityController = TextEditingController();
+  late TextEditingController _nameController = TextEditingController();
 
-  // DateTime _dateOfCheck = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    _nameController =
+        TextEditingController(text: widget.initialMedicineEntry?.name ?? "");
+  }
 
   Future<void> saveCaseSheet(Box<Patient> patientBox) async {
     // print("STARTED");
@@ -184,17 +266,28 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
 
       final medicineRegister = MedicationsEntry(name: name, quantity: quantity);
 
-      patient.medicationsEntry = [
-        ...?patient.medicationsEntry,
-        medicineRegister
-      ];
+      if (widget.medicineIndex != null) {
+        // Editing an existing case sheet
+        patient.medicationsEntry?[widget.medicineIndex!] = medicineRegister;
+      } else {
+        // Adding a new case sheet
+        patient.medicationsEntry = [
+          ...?patient.medicationsEntry,
+          medicineRegister
+        ];
+      }
+
+      // patient.medicationsEntry = [
+      //   ...?patient.medicationsEntry,
+      //   medicineRegister
+      // ];
       await patient.save();
 
       // print(patient);
       // print(caseSheet);
 
       _nameController.clear();
-      _quantityController.clear();
+      // _quantityController.clear();
 
       setState(() {
         patientBox = Hive.box<Patient>('patients4_1');

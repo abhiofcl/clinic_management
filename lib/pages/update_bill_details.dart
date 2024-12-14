@@ -116,11 +116,6 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                         // color: FluentTheme.of(context).resources.accentBackgroundColor,
                         ),
                     children: [
-                      // Padding(
-                      //   padding: EdgeInsets.all(8.0),
-                      //   child: Text('Sl No',
-                      //       style: TextStyle(fontWeight: FontWeight.bold)),
-                      // ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text('Particulars',
@@ -141,33 +136,58 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                         child: Text('Amount',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Actions',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
                     ],
                   ),
                   // Data Rows
-                  ...widget.patient.billRegister
-                          ?.map((billRecord) => TableRow(
+                  ...widget.patient.billRegister?.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final billRecord = entry.value;
+
+                        return TableRow(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(billRecord.particulars ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(billRecord.rate ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                                  Text(billRecord.quantity.toString() ?? '-'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(billRecord.price.toString() ?? ""),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(billRecord.particulars ?? '-'),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.edit),
+                                    onPressed: () => _showEditDialog(context,
+                                        widget.patient, widget.index, index),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(billRecord.rate ?? '-'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                        billRecord.quantity.toString() ?? '-'),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child:
-                                        Text(billRecord.price.toString() ?? ""),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.delete),
+                                    onPressed: () => _deleteBillRecord(index),
                                   ),
                                 ],
-                              ))
-                          .toList() ??
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList() ??
                       [],
                 ],
               ),
@@ -177,23 +197,83 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
       ),
     );
   }
-}
 
-Future<void> _showNewDialog(
-    BuildContext context, Patient patient, int index) async {
-  await showDialog<String>(
-    context: context,
-    builder: (context) => NewWidgetDialog(patient: patient, index: index),
-  );
+  Future<void> _deleteBillRecord(int billIndex) async {
+    showDialog(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Confirm Deletion'),
+        content: const Text('Are you sure you want to delete this bill entry?'),
+        actions: [
+          Button(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            child: const Text('Delete'),
+            onPressed: () async {
+              Navigator.pop(context);
+              setState(() {
+                widget.patient.billRegister?.removeAt(billIndex);
+              });
+              await widget.patient.save();
+              displayInfoBar(
+                context,
+                builder: (context, close) {
+                  return InfoBar(
+                    title: const Text('Deleted'),
+                    content: const Text('Bill entry deleted successfully'),
+                    severity: InfoBarSeverity.warning,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showEditDialog(BuildContext context, Patient patient,
+      int patientIndex, int billIndex) async {
+    final billRecord = patient.billRegister?[billIndex];
+    if (billRecord != null) {
+      await showDialog<String>(
+        context: context,
+        builder: (context) => NewWidgetDialog(
+          patient: patient,
+          index: patientIndex,
+          initialBillEntry: billRecord,
+          billIndex: billIndex,
+        ),
+      );
+    }
+  }
+
+  Future<void> _showNewDialog(
+      BuildContext context, Patient patient, int index) async {
+    await showDialog<String>(
+      context: context,
+      builder: (context) => NewWidgetDialog(patient: patient, index: index),
+    );
+  }
 }
 
 class NewWidgetDialog extends StatefulWidget {
   final Patient patient;
   final int index;
+  final BillEntry? initialBillEntry;
+  final int? billIndex;
   const NewWidgetDialog({
     super.key,
     required this.patient,
     required this.index,
+    this.initialBillEntry,
+    this.billIndex,
   });
 
   @override
@@ -201,12 +281,24 @@ class NewWidgetDialog extends StatefulWidget {
 }
 
 class _NewWidgetDialogState extends State<NewWidgetDialog> {
-  final TextEditingController _particularController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _rateController = TextEditingController();
+  late TextEditingController _particularController;
+  late TextEditingController _priceController;
+  late TextEditingController _quantityController;
+  late TextEditingController _rateController;
 
   // DateTime _dateOfCheck = DateTime.now();
+  @override
+  void initState() {
+    super.initState();
+    _particularController =
+        TextEditingController(text: widget.initialBillEntry?.particulars ?? "");
+    _priceController = TextEditingController(
+        text: widget.initialBillEntry?.price.toString() ?? "");
+    _quantityController =
+        TextEditingController(text: widget.initialBillEntry?.quantity ?? "");
+    _rateController =
+        TextEditingController(text: widget.initialBillEntry?.rate ?? "");
+  }
 
   Future<void> saveCaseSheet(Box<Patient> patientBox) async {
     // print("STARTED");
@@ -224,7 +316,15 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
           quantity: quantity,
           rate: rate);
 
-      patient.billRegister = [...?patient.billRegister, billRegister];
+      if (widget.billIndex != null) {
+        // Editing an existing case sheet
+        patient.billRegister?[widget.billIndex!] = billRegister;
+      } else {
+        // Adding a new case sheet
+        patient.billRegister = [...?patient.billRegister, billRegister];
+      }
+
+      // patient.billRegister = [...?patient.billRegister, billRegister];
       await patient.save();
 
       // print(patient);

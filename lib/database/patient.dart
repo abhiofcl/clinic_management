@@ -107,6 +107,18 @@ class Patient extends HiveObject {
   @HiveField(33)
   String billNo = "";
 
+  @HiveField(34)
+  String habits;
+
+  @HiveField(35)
+  String sensitivity;
+
+  @HiveField(36)
+  String hereditary;
+
+  @HiveField(37)
+  String menstrualHistory;
+
   Patient({
     required this.name,
     required this.age,
@@ -131,6 +143,10 @@ class Patient extends HiveObject {
     required this.bowel,
     required this.sleep,
     required this.urine,
+    required this.habits,
+    required this.hereditary,
+    required this.sensitivity,
+    required this.menstrualHistory,
     this.caseSheets,
     this.status,
   });
