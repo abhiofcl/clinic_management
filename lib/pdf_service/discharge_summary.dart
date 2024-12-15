@@ -12,10 +12,6 @@ class DischarSummaryPDFService {
   static Future<void> generatePatientPDF(Patient patient) async {
     final pdf = pw.Document();
 
-    // final ByteData logoBytes = await rootBundle.load('assets/logo.jpg');
-    // final Uint8List logoUint8List = logoBytes.buffer.asUint8List();
-    // final logoImage = pw.MemoryImage(logoUint8List);
-
     final List<List<Object>> caseSheetData = [
       // Header row
     ];
@@ -126,25 +122,6 @@ class DischarSummaryPDFService {
     // Open the PDF
     await OpenFile.open(file.path);
   }
-
-// Helper method to create consistent detail rows
-  // static pw.Widget _buildDetailRow(String label, String value) {
-  //   return pw.Row(
-  //     children: [
-  //       pw.Text(
-  //         '$label: ',
-  //         style: pw.TextStyle(
-  //           fontSize: 10,
-  //           fontWeight: pw.FontWeight.bold,
-  //         ),
-  //       ),
-  //       pw.Text(
-  //         value,
-  //         style: const pw.TextStyle(fontSize: 10),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   static pw.Widget _buildPatientInfo(Patient patient) {
     return pw.Column(
@@ -269,7 +246,7 @@ class DischarSummaryPDFService {
             ],
           ),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text("\nPh : +91 9846889793 | 8075749619"),
+            pw.Text("\nPh : +91 9495172295 | 8075749619"),
           ]),
           pw.SizedBox(height: 10),
         ],

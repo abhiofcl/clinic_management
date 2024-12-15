@@ -154,7 +154,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
       image: _selectedImage,
     );
 
-    final box = await Hive.openBox<Patient>('patients4_1');
+    final box = await Hive.openBox<Patient>('patients4_2');
     await box.add(patient);
 
     // Show success message
@@ -472,6 +472,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
               child: TextFormBox(
                 controller: _habitsController,
                 placeholder: 'Enter urine status ',
+                maxLines: 2,
               ),
             ),
             const SizedBox(height: 10),
@@ -480,6 +481,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
               child: TextFormBox(
                 controller: _hyperController,
                 placeholder: 'Enter hyper sensitivity status ',
+                maxLines: 2,
               ),
             ),
             const SizedBox(height: 10),
@@ -488,6 +490,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
               child: TextFormBox(
                 controller: _hereditaryController,
                 placeholder: 'Enter hereditary status ',
+                maxLines: 2,
               ),
             ),
             const SizedBox(height: 10),
@@ -496,6 +499,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
               child: TextFormBox(
                 controller: _menstrualController,
                 placeholder: 'Enter menstrual history ',
+                maxLines: 2,
               ),
             ),
             InfoLabel(
@@ -587,7 +591,7 @@ class DatabaseCleanup {
       Hive.registerAdapter(PatientAdapter());
 
       // 8. Reopen boxes
-      await Hive.openBox<Patient>('patients4_1');
+      await Hive.openBox<Patient>('patients4_2');
 
       print('Database cleanup completed successfully');
     } catch (e) {

@@ -171,7 +171,7 @@ class DailyCaseSheetPDFService {
             ],
           ),
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-            pw.Text("\nPh : +91 9846889793 | 8075749619"),
+            pw.Text("\nPh : +91 9495172295 | 8075749619"),
           ]),
           pw.SizedBox(height: 10),
         ],
