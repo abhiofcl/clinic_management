@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:clinic_management_new/database/patient.dart';
 import 'package:clinic_management_new/pages/daily_casesheet.dart';
 import 'package:clinic_management_new/pages/medicine_page.dart';
@@ -123,11 +125,27 @@ class _PatientListPageState extends State<PatientListPage> {
           itemBuilder: (context, index) {
             final patient = box.getAt(index);
             if (patient == null) return const SizedBox.shrink();
-
+            final Uint8List? image = patient.image;
+            // print(image);
             return Card(
               backgroundColor: const Color.fromARGB(255, 200, 145, 90),
               margin: const EdgeInsets.only(bottom: 16),
               child: Expander(
+                // icon: const Icon(FluentIcons.add_friend),
+                leading: image != null
+                    ? ClipRRect(
+                        borderRadius:
+                            BorderRadius.circular(8.0), // Rounded corners
+                        child: Image.memory(
+                          image!,
+                          width: 90, // Adjust to desired size
+                          height: 90,
+                          fit: BoxFit
+                              .contain, // Ensures the image fits within the box
+                        ),
+                      )
+                    : const Icon(
+                        FluentIcons.contact), // Fallback icon if image is null,
                 header: Text(patient.name,
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 content: Column(

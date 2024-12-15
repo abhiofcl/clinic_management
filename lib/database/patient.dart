@@ -1,4 +1,6 @@
 // patient.g.dart - Generate this file using: flutter pub run build_runner build
+import 'dart:typed_data';
+
 import 'package:hive/hive.dart';
 
 part 'patient.g.dart';
@@ -119,6 +121,9 @@ class Patient extends HiveObject {
   @HiveField(37)
   String menstrualHistory;
 
+  @HiveField(38)
+  Uint8List? image;
+
   Patient({
     required this.name,
     required this.age,
@@ -147,6 +152,7 @@ class Patient extends HiveObject {
     required this.hereditary,
     required this.sensitivity,
     required this.menstrualHistory,
+    this.image,
     this.caseSheets,
     this.status,
   });

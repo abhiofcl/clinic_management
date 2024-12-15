@@ -1,13 +1,16 @@
 // main.dart or your form file
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:clinic_management_new/database/patient.dart';
 import 'package:clinic_management_new/patient_details.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 class PatientFormPage extends StatelessWidget {
   const PatientFormPage({super.key});
@@ -18,22 +21,23 @@ class PatientFormPage extends StatelessWidget {
       header: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          ElevatedButton(
+          material.ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
+                material.MaterialPageRoute(
                   builder: (context) => const PatientListPage(),
                 ),
               );
             },
             child: const Text('Show All'),
           ),
-          ElevatedButton(
+          material.ElevatedButton(
             onPressed: () async {
               await DatabaseCleanup.cleanDatabase();
               // Optionally show a success message
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Database reset successfully')),
+              material.ScaffoldMessenger.of(context).showSnackBar(
+                const material.SnackBar(
+                    content: Text('Database reset successfully')),
               );
             },
             child: const Text('Reset Database'),
@@ -83,6 +87,12 @@ class _PatientInputFormState extends State<PatientInputForm> {
   final TextEditingController _bowelController = TextEditingController();
   final TextEditingController _sleepController = TextEditingController();
   final TextEditingController _urineController = TextEditingController();
+  final TextEditingController _habitsController = TextEditingController();
+  final TextEditingController _hyperController = TextEditingController();
+  final TextEditingController _hereditaryController = TextEditingController();
+  final TextEditingController _menstrualController = TextEditingController();
+
+  Uint8List? _selectedImage; // To store the uploaded image
 
   @override
   void dispose() {
@@ -104,6 +114,10 @@ class _PatientInputFormState extends State<PatientInputForm> {
     _sleepController.dispose();
     _urineController.dispose();
     _bpController.dispose();
+    _menstrualController.dispose();
+    _habitsController.dispose();
+    _hereditaryController.dispose();
+    _hyperController.dispose();
     super.dispose();
   }
 
@@ -132,7 +146,12 @@ class _PatientInputFormState extends State<PatientInputForm> {
       sleep: _sleepController.text,
       urine: _urineController.text,
       bp: _bpController.text,
+      habits: _habitsController.text,
+      hereditary: _hereditaryController.text,
+      sensitivity: _hyperController.text,
+      menstrualHistory: _menstrualController.text,
       status: "active",
+      image: _selectedImage,
     );
 
     final box = await Hive.openBox<Patient>('patients4_1');
@@ -183,6 +202,30 @@ class _PatientInputFormState extends State<PatientInputForm> {
       },
     );
   }
+
+  // Image picking logic
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
+    if (image != null) {
+      final bytes = await image.readAsBytes(); // Corrected to async method
+      setState(() {
+        _selectedImage = bytes;
+      });
+    }
+  }
+
+  // Future<void> _captureImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  //   if (image != null) {
+  //     final bytes = await image.readAsBytes(); // Corrected to async method
+  //     setState(() {
+  //       _selectedImage = bytes;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -423,6 +466,71 @@ class _PatientInputFormState extends State<PatientInputForm> {
                 placeholder: 'Enter urine status ',
               ),
             ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Habits/Addictions',
+              child: TextFormBox(
+                controller: _habitsController,
+                placeholder: 'Enter urine status ',
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Hyper Sensitivity',
+              child: TextFormBox(
+                controller: _hyperController,
+                placeholder: 'Enter hyper sensitivity status ',
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Hereditary',
+              child: TextFormBox(
+                controller: _hereditaryController,
+                placeholder: 'Enter hereditary status ',
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Menstrual history',
+              child: TextFormBox(
+                controller: _menstrualController,
+                placeholder: 'Enter menstrual history ',
+              ),
+            ),
+            InfoLabel(
+              label: 'Attach Image',
+              child: Column(
+                children: [
+                  if (_selectedImage != null)
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      height: 150,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Image.memory(
+                        _selectedImage!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  Row(
+                    children: [
+                      FilledButton(
+                        onPressed: _pickImage,
+                        child: const Text('Pick Image'),
+                      ),
+                      // const SizedBox(width: 10),
+                      // FilledButton(
+                      //   onPressed: _captureImage,
+                      //   child: const Text('Capture Image'),
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 20),
             Button(
               child: const Text('Submit'),
@@ -488,3 +596,27 @@ class DatabaseCleanup {
     }
   }
 }
+
+// class MyCameraDelegate extends ImagePickerCameraDelegate {
+//   @override
+//   Future<XFile?> takePhoto(
+//       {ImagePickerCameraDelegateOptions options =
+//           const ImagePickerCameraDelegateOptions()}) async {
+//     return _takeAPhoto(options.preferredCameraDevice);
+//   }
+
+//   @override
+//   Future<XFile?> takeVideo(
+//       {ImagePickerCameraDelegateOptions options =
+//           const ImagePickerCameraDelegateOptions()}) async {
+//     return _takeAVideo(options.preferredCameraDevice);
+//   }
+// }
+
+// // ···
+// void setUpCameraDelegate() {
+//   final ImagePickerPlatform instance = ImagePickerPlatform.instance;
+//   if (instance is CameraDelegatingImagePickerPlatform) {
+//     instance.cameraDelegate = MyCameraDelegate();
+//   }
+// }
