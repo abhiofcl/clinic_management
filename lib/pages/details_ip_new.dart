@@ -76,7 +76,11 @@ class _PatientInputFormState extends State<PatientInputForm> {
   DateTime _dateOfDischarge = DateTime.now();
   final TextEditingController _diagnosisController = TextEditingController();
 
-  final TextEditingController _historyController = TextEditingController();
+  final TextEditingController _presentComplaintsController =
+      TextEditingController();
+  final TextEditingController _historyOfPresentComplaintsController =
+      TextEditingController();
+  final TextEditingController _pastHistoryController = TextEditingController();
   final TextEditingController _heartRateController = TextEditingController();
   final TextEditingController _bpController = TextEditingController();
 
@@ -104,7 +108,9 @@ class _PatientInputFormState extends State<PatientInputForm> {
     _opNoController.dispose();
     _roomNoController.dispose();
     _diagnosisController.dispose();
-    _historyController.dispose();
+    _presentComplaintsController.dispose();
+    _historyOfPresentComplaintsController.dispose();
+    _pastHistoryController.dispose();
     _heartRateController.dispose();
     _weightController.dispose();
     _heightController.dispose();
@@ -136,7 +142,9 @@ class _PatientInputFormState extends State<PatientInputForm> {
       dateOfAdmission: _dateOfAdmission,
       dateOfDischarge: _dateOfDischarge,
       diagnosis: _diagnosisController.text,
-      history: _historyController.text,
+      presentComplaints: _presentComplaintsController.text,
+      historyOfPresentComplaints: _historyOfPresentComplaintsController.text,
+      pastHistory: _pastHistoryController.text,
       heartRate: _heartRateController.text,
       weight: _weightController.text,
       height: _heightController.text,
@@ -187,7 +195,9 @@ class _PatientInputFormState extends State<PatientInputForm> {
               });
               _diagnosisController.clear();
 
-              _historyController.clear();
+              _pastHistoryController.clear();
+              _presentComplaintsController.clear();
+              _historyOfPresentComplaintsController.clear();
               _heartRateController.clear();
               _weightController.clear();
               _heightController.clear();
@@ -387,10 +397,28 @@ class _PatientInputFormState extends State<PatientInputForm> {
             ),
             const SizedBox(height: 10),
             InfoLabel(
-              label: 'History',
+              label: 'Present Complaints',
               child: TextFormBox(
-                controller: _historyController,
-                placeholder: 'Enter History',
+                controller: _presentComplaintsController,
+                placeholder: 'Enter Present Complaints',
+                maxLines: 4,
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'History of Present Complaints',
+              child: TextFormBox(
+                controller: _historyOfPresentComplaintsController,
+                placeholder: 'Enter History of Present Complaints',
+                maxLines: 4,
+              ),
+            ),
+            const SizedBox(height: 10),
+            InfoLabel(
+              label: 'Past History',
+              child: TextFormBox(
+                controller: _pastHistoryController,
+                placeholder: 'Enter Past History',
                 maxLines: 4,
               ),
             ),
