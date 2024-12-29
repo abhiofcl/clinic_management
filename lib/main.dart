@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:clinic_management_new/database/employee.dart';
 import 'package:clinic_management_new/database/patient.dart';
 
 import 'package:clinic_management_new/pages/test.dart';
@@ -7,7 +6,6 @@ import 'package:clinic_management_new/pages/test.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:hive_flutter/adapters.dart';
-import 'package:path_provider/path_provider.dart';
 
 // Future<void> initHive() async {
 //   if (Platform.isWindows) {
@@ -34,15 +32,22 @@ void main() async {
   Hive.registerAdapter(BillEntryAdapter());
   Hive.registerAdapter(MedicationsEntryAdapter());
   Hive.registerAdapter(ConsumablesEntryAdapter());
+  Hive.registerAdapter(EmployeeAdapter());
+  Hive.registerAdapter(DutySheetEntryAdapter());
+
   // Open the box
-  await Hive.openBox<Patient>('patients4_3');
+  final patientBox = await Hive.openBox<Patient>('patients4_3');
+  final employeeBox = await Hive.openBox<Patient>('employees_1_1');
 
   // runApp(MyApp());
-  runApp(const MyApp());
+  runApp(MyApp(patientBox: patientBox, employeeBox: employeeBox));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final Box patientBox;
+  final Box employeeBox;
+
+  const MyApp({super.key, required this.patientBox, required this.employeeBox});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -51,19 +56,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
 
-  bool isDark = false;
-
-  void toggleTheme() {
-    setState(() {
-      isDark = !isDark;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FluentApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Shanti Ayureda Ashram',
       theme: FluentThemeData(
         brightness: Brightness.light,
         accentColor: Colors.blue,
@@ -75,19 +72,11 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.teal.light,
         cardColor: Colors.grey[10],
       ),
-      // Define dark theme settings
-      // darkTheme: FluentThemeData(
-      //   brightness: Brightness.dark,
-      //   accentColor: Colors.blue,
-      //   visualDensity: VisualDensity.standard,
-      //   focusTheme: FocusThemeData(
-      //     glowFactor: is10footScreen(context) ? 2.0 : 0.0,
-      //   ),
-      //   // Dark theme custom colors
-      //   scaffoldBackgroundColor: Colors.grey[180],
-      //   cardColor: Colors.grey[160],
-      // ),
-      home: MyWidget(isDark: isDark, toggleTheme: toggleTheme),
+
+      home: MyWidget(
+        patientBox: widget.patientBox,
+        employeeBox: widget.employeeBox,
+      ),
       // home: PatientListPage(),
     );
   }
