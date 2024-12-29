@@ -237,7 +237,11 @@ class _ActiePatientListPageState extends State<ActiePatientListPage> {
                     _buildInfoRow('Date of Discharge',
                         _formatDate(patient.dateOfDischarge)),
                     _buildInfoRow('Diagnosis', patient.diagnosis),
-                    _buildInfoRow('History', patient.history),
+                    _buildInfoRow(
+                        'Present Complaints', patient.presentComplaints),
+                    _buildInfoRow('History of Present Complaints',
+                        patient.historyOfPresentComplaints),
+                    _buildInfoRow('Past History', patient.pastHistory),
                     _buildInfoRow('Heart Rate', patient.heartRate),
                     _buildInfoRow('Weight', patient.weight),
                     _buildInfoRow('Height', patient.height),
