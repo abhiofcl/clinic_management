@@ -62,7 +62,7 @@ class DischarSummaryPDFService {
                       fontWeight: pw.FontWeight.bold,
                     )),
                 pw.SizedBox(height: 10),
-                pw.Text(patient.history),
+                pw.Text(patient.pastHistory),
                 pw.SizedBox(height: 10),
                 pw.Text("Treatments given",
                     style: pw.TextStyle(
