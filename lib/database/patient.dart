@@ -47,7 +47,7 @@ class Patient extends HiveObject {
   String diagnosis;
 
   @HiveField(13)
-  String history;
+  String presentComplaints;
 
   @HiveField(14)
   String heartRate;
@@ -124,6 +124,14 @@ class Patient extends HiveObject {
   @HiveField(38)
   Uint8List? image;
 
+  @HiveField(39)
+  String historyOfPresentComplaints;
+  @HiveField(40)
+  String pastHistory;
+
+  @HiveField(41)
+  List<ConsumablesEntry>? consumables;
+
   Patient({
     required this.name,
     required this.age,
@@ -138,7 +146,9 @@ class Patient extends HiveObject {
     required this.dateOfAdmission,
     required this.dateOfDischarge,
     required this.diagnosis,
-    required this.history,
+    required this.presentComplaints,
+    required this.historyOfPresentComplaints,
+    required this.pastHistory,
     required this.heartRate,
     required this.bp,
     required this.weight,
@@ -245,5 +255,6 @@ class ConsumablesEntry extends HiveObject {
     this.particulars,
     this.quantity,
     this.rate,
+    this.date,
   });
 }
