@@ -71,11 +71,15 @@ class DutySheetEntry extends HiveObject {
   @HiveField(5)
   String? amount;
 
+  @HiveField(6)
+  String? remarks;
+
   DutySheetEntry({
     this.date,
     this.timeSlot,
     this.qty,
     this.rate,
     this.amount,
+    this.remarks,
   });
 }
