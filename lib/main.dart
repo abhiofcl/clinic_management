@@ -13,10 +13,10 @@ Future<void> initHive() async {
   if (Platform.isWindows) {
     final appDocDir = await getApplicationDocumentsDirectory();
     Hive.init(appDocDir.path);
-    await Hive.openBox("patients4_2");
+    await Hive.openBox("patients4_3");
   } else {
     await Hive.initFlutter();
-    await Hive.openBox("patients4_2");
+    await Hive.openBox("patients4_3");
   }
 
   // Register the generated adapter
@@ -35,7 +35,7 @@ void main() async {
   Hive.registerAdapter(MedicationsEntryAdapter());
 
   // Open the box
-  await Hive.openBox<Patient>('patients4_2');
+  await Hive.openBox<Patient>('patients4_3');
 
   // runApp(MyApp());
   runApp(const MyApp());

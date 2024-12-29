@@ -222,3 +222,28 @@ class MedicationsEntry extends HiveObject {
     this.quantity,
   });
 }
+
+@HiveType(typeId: 4)
+class ConsumablesEntry extends HiveObject {
+  @HiveField(0)
+  double? price;
+
+  @HiveField(1)
+  String? particulars;
+
+  @HiveField(2)
+  String? quantity;
+
+  @HiveField(3)
+  String? rate;
+
+  @HiveField(4)
+  DateTime? date;
+
+  ConsumablesEntry({
+    this.price,
+    this.particulars,
+    this.quantity,
+    this.rate,
+  });
+}

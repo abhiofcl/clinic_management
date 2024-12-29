@@ -139,6 +139,14 @@ class ReceiptPDFService {
   }
 
   static pw.Widget _buildPatientInfo(Patient patient) {
+    String title;
+    if (patient.gender.toLowerCase() == 'male') {
+      title = 'Mr';
+    } else if (patient.gender.toLowerCase() == 'female') {
+      title = 'Mrs';
+    } else {
+      title = 'Mx'; // Neutral title for other genders
+    }
     return pw.Container(
       decoration: const pw.BoxDecoration(
         border: pw.Border(
@@ -155,7 +163,7 @@ class ReceiptPDFService {
           pw.Text(
             style: const pw.TextStyle(
                 fontSize: 13, height: 12, lineSpacing: 5, wordSpacing: 1.5),
-            'Received Rs. ${patient.totalBill} ( ${NumberToWords.convertToWords(patient.totalBill.toInt())} only ) from  Mr/Mrs ${patient.name},  being the ayurveda  treatment  charges  and  stay etc. for ${patient.days} days in Shanthi Ayurveda Ashram ,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
+            'Received Rs. ${patient.totalBill} ( ${NumberToWords.convertToWords(patient.totalBill.toInt())} only ) from  $title ${patient.name},  being the ayurveda  treatment  charges  and  stay etc. for ${patient.days} days in Shanthi Ayurveda Ashram ,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
           ),
           pw.SizedBox(height: 40),
           pw.Row(

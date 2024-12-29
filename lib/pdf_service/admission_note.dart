@@ -133,6 +133,14 @@ class AdmissionNotePDFService {
   }
 
   static pw.Widget _buildPatientInfo(Patient patient) {
+    String title;
+    if (patient.gender.toLowerCase() == 'male') {
+      title = 'Mr';
+    } else if (patient.gender.toLowerCase() == 'female') {
+      title = 'Mrs';
+    } else {
+      title = 'Mx'; // Neutral title for other genders
+    }
     return pw.Container(
       decoration: const pw.BoxDecoration(
         border: pw.Border(
@@ -154,7 +162,7 @@ class AdmissionNotePDFService {
               // height: 5,
               fontSize: 13,
             ),
-            'Mr/Mrs ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
+            '$title ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
           ),
           pw.SizedBox(height: 40),
           pw.Row(

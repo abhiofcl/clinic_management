@@ -32,10 +32,10 @@ class _PatientListPageState extends State<PatientListPage> {
 
   Future<void> _initializeHive() async {
     try {
-      if (!Hive.isBoxOpen('patients4_2')) {
-        _patientBox = await Hive.openBox<Patient>('patients4_2');
+      if (!Hive.isBoxOpen('patients4_3')) {
+        _patientBox = await Hive.openBox<Patient>('patients4_3');
       } else {
-        _patientBox = Hive.box<Patient>('patients4_2');
+        _patientBox = Hive.box<Patient>('patients4_3');
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -385,7 +385,7 @@ class _PatientListPageState extends State<PatientListPage> {
             ),
             child: const Text('Delete'),
             onPressed: () async {
-              final box = Hive.box<Patient>('patients4_2');
+              final box = Hive.box<Patient>('patients4_3');
               await box.deleteAt(index);
               Navigator.pop(context);
               displayInfoBar(
@@ -497,7 +497,7 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4_2');
+              final box = Hive.box<Patient>('patients4_3');
               await box.putAt(index, patient);
 
               if (context.mounted) {
@@ -656,7 +656,7 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4_2');
+              final box = Hive.box<Patient>('patients4_3');
               await box.putAt(index, patient);
               await _generateDischargeSheetPDF(patient);
               if (context.mounted) {
@@ -722,7 +722,7 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4_2');
+              final box = Hive.box<Patient>('patients4_3');
               await box.putAt(index, patient);
               await _generateReceiptPDF(patient);
               if (context.mounted) {
@@ -777,7 +777,7 @@ class _PatientListPageState extends State<PatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4_2');
+              final box = Hive.box<Patient>('patients4_3');
               await box.putAt(index, patient);
               await _generateBillTableSheetPDF(patient);
               // await _generateReceiptPDF(patient);
@@ -973,7 +973,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       // Update other fields...
 
       // Save to Hive
-      final box = Hive.box<Patient>('patients4_2');
+      final box = Hive.box<Patient>('patients4_3');
       await box.putAt(index, patient);
 
       if (context.mounted) {
@@ -1012,7 +1012,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       admissionController.dispose();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4_2');
+        patientBox = Hive.box<Patient>('patients4_3');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -1096,7 +1096,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4_2');
+            final box = Hive.box<Patient>('patients4_3');
             await saveCaseSheet(box, widget.index);
             // await box.putAt(widget.index, widget.patient);
 

@@ -28,90 +28,156 @@ class DischarSummaryPDFService {
     }
     // Add page to the PDF
 
-    pdf.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a4,
-      margin: const pw.EdgeInsets.all(32),
-      build: (pw.Context context) => [
-        // pw.Image(logoImage, width: 60, height: 60),
-
-        _buildHeader(),
-
-        pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
-          _buildPatientInfo(patient),
-          _buildAdmissionInfo(patient),
-        ]),
-
-        _buildMedicalInfo(patient),
-        pw.Text("Case History",
-            style: pw.TextStyle(
-              fontSize: 13,
-              fontWeight: pw.FontWeight.bold,
-            )),
-        pw.SizedBox(height: 10),
-        pw.Text(patient.history),
-        pw.SizedBox(height: 10),
-        pw.Text("Treatments given",
-            style: pw.TextStyle(
-              fontSize: 13,
-              fontWeight: pw.FontWeight.bold,
-            )),
-        pw.SizedBox(height: 10),
-        pw.Text(patient.treatment ?? ""),
-        pw.SizedBox(height: 10),
-        pw.Text("Internal Medicines",
-            style: pw.TextStyle(
-              fontSize: 13,
-              fontWeight: pw.FontWeight.bold,
-            )),
-        _buildTreatmentInfo(patient),
-      ],
-    ));
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(32),
+        margin:
+            pw.EdgeInsets.zero, // No margin for the page to accommodate border
         build: (pw.Context context) => [
-          _buildHeader(),
-          pw.SizedBox(height: 20),
-
-          pw.Text("Condition at the time of Discharge",
-              style: pw.TextStyle(
-                fontSize: 15,
-                fontWeight: pw.FontWeight.bold,
-              )),
-          pw.SizedBox(height: 10),
-          _buildInfoRow("Bowel", patient.bowel),
-          _buildInfoRow("Apeite", patient.apetite),
-          _buildInfoRow("Sleep", patient.sleep),
-          _buildInfoRow("Blood Pressure", patient.bp),
-          pw.SizedBox(height: 20),
-          pw.Text("Advice on Discharge",
-              style: pw.TextStyle(
-                fontSize: 15,
-                fontWeight: pw.FontWeight.bold,
-              )),
-          pw.SizedBox(height: 10),
-          pw.Text(patient.adice ?? ""),
-          pw.SizedBox(height: 20),
-          pw.Text("Medications",
-              style: pw.TextStyle(
-                fontSize: 15,
-                fontWeight: pw.FontWeight.bold,
-              )),
-          pw.SizedBox(height: 10),
-          pw.Text(patient.otherMedication ?? ""),
-          // pw.SizedBox(height: 20),
-          pw.Spacer(),
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.end,
-            children: [
-              pw.Text("Dr Nisha P\n\n Chief physician"),
-            ],
+          pw.Container(
+            margin: const pw.EdgeInsets.all(16), // Margin inside the border
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(
+                  color: PdfColors.black, width: 2), // Fixed border
+            ),
+            padding: const pw.EdgeInsets.all(16), // Padding inside the border
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                _buildHeader(),
+                pw.SizedBox(height: 20),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildPatientInfo(patient),
+                    _buildAdmissionInfo(patient),
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+                _buildMedicalInfo(patient),
+                pw.SizedBox(height: 10),
+                pw.Text("Case History",
+                    style: pw.TextStyle(
+                      fontSize: 13,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Text(patient.history),
+                pw.SizedBox(height: 10),
+                pw.Text("Treatments given",
+                    style: pw.TextStyle(
+                      fontSize: 13,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Text(patient.treatment ?? ""),
+                pw.SizedBox(height: 10),
+                pw.Text("Internal Medicines",
+                    style: pw.TextStyle(
+                      fontSize: 13,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                _buildTreatmentInfo(patient),
+                pw.SizedBox(height: 20),
+                pw.Text("Condition at the time of Discharge",
+                    style: pw.TextStyle(
+                      fontSize: 15,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                pw.SizedBox(height: 10),
+                _buildInfoRow("Bowel", patient.bowel),
+                _buildInfoRow("Appetite", patient.apetite),
+                _buildInfoRow("Sleep", patient.sleep),
+                _buildInfoRow("Blood Pressure", patient.bp),
+                pw.SizedBox(height: 20),
+                pw.Text("Advice on Discharge",
+                    style: pw.TextStyle(
+                      fontSize: 15,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Text(patient.adice ?? ""),
+                pw.SizedBox(height: 20),
+                pw.Text("Medications",
+                    style: pw.TextStyle(
+                      fontSize: 15,
+                      fontWeight: pw.FontWeight.bold,
+                    )),
+                pw.SizedBox(height: 10),
+                pw.Text(patient.otherMedication ?? "No other medications"),
+                pw.SizedBox(height: 30),
+                // pw.Spacer(),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.end,
+                  children: [
+                    pw.Text("Dr Nisha P\n\n Chief physician"),
+                  ],
+                ),
+                pw.SizedBox(height: 20),
+              ],
+            ),
           ),
-          pw.SizedBox(height: 20)
         ],
+        footer: (pw.Context context) {
+          return pw.Container(
+            width: double.infinity,
+            alignment: pw.Alignment.centerRight,
+            margin: const pw.EdgeInsets.only(top: 8, right: 16, bottom: 16),
+            child: pw.Text(
+              'Page ${context.pageNumber} of ${context.pagesCount}',
+              style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey),
+            ),
+          );
+        },
       ),
     );
+
+    // pdf.addPage(
+    //   pw.MultiPage(
+    //     pageFormat: PdfPageFormat.a4,
+    //     margin: const pw.EdgeInsets.all(32),
+    //     build: (pw.Context context) => [
+    //       _buildHeader(),
+    //       pw.SizedBox(height: 20),
+
+    //       pw.Text("Condition at the time of Discharge",
+    //           style: pw.TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: pw.FontWeight.bold,
+    //           )),
+    //       pw.SizedBox(height: 10),
+    //       _buildInfoRow("Bowel", patient.bowel),
+    //       _buildInfoRow("Apeite", patient.apetite),
+    //       _buildInfoRow("Sleep", patient.sleep),
+    //       _buildInfoRow("Blood Pressure", patient.bp),
+    //       pw.SizedBox(height: 20),
+    //       pw.Text("Advice on Discharge",
+    //           style: pw.TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: pw.FontWeight.bold,
+    //           )),
+    //       pw.SizedBox(height: 10),
+    //       pw.Text(patient.adice ?? ""),
+    //       pw.SizedBox(height: 20),
+    //       pw.Text("Medications",
+    //           style: pw.TextStyle(
+    //             fontSize: 15,
+    //             fontWeight: pw.FontWeight.bold,
+    //           )),
+    //       pw.SizedBox(height: 10),
+    //       pw.Text(patient.otherMedication ?? ""),
+    //       // pw.SizedBox(height: 20),
+    //       pw.Spacer(),
+    //       pw.Row(
+    //         mainAxisAlignment: pw.MainAxisAlignment.end,
+    //         children: [
+    //           pw.Text("Dr Nisha P\n\n Chief physician"),
+    //         ],
+    //       ),
+    //       pw.SizedBox(height: 20)
+    //     ],
+    //   ),
+    // );
     // Save the PDF
     final directory = await getApplicationDocumentsDirectory();
     final fileName =

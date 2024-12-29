@@ -154,7 +154,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
       image: _selectedImage,
     );
 
-    final box = await Hive.openBox<Patient>('patients4_2');
+    final box = await Hive.openBox<Patient>('patients4_3');
     await box.add(patient);
 
     // Show success message
@@ -591,7 +591,7 @@ class DatabaseCleanup {
       Hive.registerAdapter(PatientAdapter());
 
       // 8. Reopen boxes
-      await Hive.openBox<Patient>('patients4_2');
+      await Hive.openBox<Patient>('patients4_3');
 
       print('Database cleanup completed successfully');
     } catch (e) {
