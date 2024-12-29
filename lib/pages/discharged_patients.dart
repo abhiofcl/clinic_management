@@ -239,7 +239,7 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
                     _buildInfoRow('Date of Discharge',
                         _formatDate(patient.dateOfDischarge)),
                     _buildInfoRow('Diagnosis', patient.diagnosis),
-                    _buildInfoRow('History', patient.history),
+                    _buildInfoRow('History', patient.pastHistory),
                     _buildInfoRow('Heart Rate', patient.heartRate),
                     _buildInfoRow('Weight', patient.weight),
                     _buildInfoRow('Height', patient.height),
