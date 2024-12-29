@@ -9,19 +9,19 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<void> initHive() async {
-  if (Platform.isWindows) {
-    final appDocDir = await getApplicationDocumentsDirectory();
-    Hive.init(appDocDir.path);
-    await Hive.openBox("patients4_3");
-  } else {
-    await Hive.initFlutter();
-    await Hive.openBox("patients4_3");
-  }
+// Future<void> initHive() async {
+//   if (Platform.isWindows) {
+//     final appDocDir = await getApplicationDocumentsDirectory();
+//     Hive.init(appDocDir.path);
+//     await Hive.openBox("patients4_3");
+//   } else {
+//     await Hive.initFlutter();
+//     await Hive.openBox("patients4_3");
+//   }
 
-  // Register the generated adapter
-  Hive.registerAdapter(PatientAdapter());
-}
+//   // Register the generated adapter
+//   Hive.registerAdapter(PatientAdapter());
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ void main() async {
   Hive.registerAdapter(CaseSheetEntryAdapter());
   Hive.registerAdapter(BillEntryAdapter());
   Hive.registerAdapter(MedicationsEntryAdapter());
-
+  Hive.registerAdapter(ConsumablesEntryAdapter());
   // Open the box
   await Hive.openBox<Patient>('patients4_3');
 
