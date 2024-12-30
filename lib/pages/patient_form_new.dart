@@ -6,14 +6,14 @@ import 'package:clinic_management_new/database/patient.dart';
 import 'package:clinic_management_new/patient_details.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 
 class PatientFormPage extends StatelessWidget {
-  const PatientFormPage({super.key});
+  final Box patientBox;
+
+  const PatientFormPage({super.key, required this.patientBox});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,9 @@ class PatientFormPage extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 material.MaterialPageRoute(
-                  builder: (context) => const PatientListPage(),
+                  builder: (context) => PatientListPage(
+                    patientBox: patientBox,
+                  ),
                 ),
               );
             },
@@ -44,15 +46,16 @@ class PatientFormPage extends StatelessWidget {
           ),
         ],
       ),
-      content: Container(
-        child: const PatientInputForm(),
+      content: PatientInputForm(
+        patientBox: patientBox,
       ),
     );
   }
 }
 
 class PatientInputForm extends StatefulWidget {
-  const PatientInputForm({super.key});
+  final Box patientBox;
+  const PatientInputForm({super.key, required this.patientBox});
 
   @override
   _PatientInputFormState createState() => _PatientInputFormState();
@@ -96,6 +99,15 @@ class _PatientInputFormState extends State<PatientInputForm> {
   final TextEditingController _hereditaryController = TextEditingController();
   final TextEditingController _menstrualController = TextEditingController();
 
+  final TextEditingController _naadiController = TextEditingController();
+  final TextEditingController _mutraController = TextEditingController();
+  final TextEditingController _malamController = TextEditingController();
+  final TextEditingController _jihwaController = TextEditingController();
+  final TextEditingController _sabdaController = TextEditingController();
+  final TextEditingController _sparsaController = TextEditingController();
+  final TextEditingController _drikController = TextEditingController();
+  final TextEditingController _akritiController = TextEditingController();
+
   Uint8List? _selectedImage; // To store the uploaded image
 
   @override
@@ -124,46 +136,61 @@ class _PatientInputFormState extends State<PatientInputForm> {
     _habitsController.dispose();
     _hereditaryController.dispose();
     _hyperController.dispose();
+    _naadiController.dispose();
+    _mutraController.dispose();
+    _malamController.dispose();
+    _jihwaController.dispose();
+    _sabdaController.dispose();
+    _sparsaController.dispose();
+    _drikController.dispose();
+    _akritiController.dispose();
     super.dispose();
   }
 
   Future<void> _savePatient() async {
     final patient = Patient(
-      name: _nameController.text,
-      age: _age,
-      occupation: _occupationController.text,
-      address: _addressController.text,
-      nationality: _nationalityController.text,
-      maritalStatus: _maritalStatus ?? '',
-      gender: _gender ?? '',
-      ipNo: _ipNoController.text,
-      opNo: _opNoController.text,
-      roomNo: _roomNoController.text,
-      dateOfAdmission: _dateOfAdmission,
-      dateOfDischarge: _dateOfDischarge,
-      diagnosis: _diagnosisController.text,
-      presentComplaints: _presentComplaintsController.text,
-      historyOfPresentComplaints: _historyOfPresentComplaintsController.text,
-      pastHistory: _pastHistoryController.text,
-      heartRate: _heartRateController.text,
-      weight: _weightController.text,
-      height: _heightController.text,
-      diet: _dietController.text,
-      apetite: _apetiteController.text,
-      bowel: _bowelController.text,
-      sleep: _sleepController.text,
-      urine: _urineController.text,
-      bp: _bpController.text,
-      habits: _habitsController.text,
-      hereditary: _hereditaryController.text,
-      sensitivity: _hyperController.text,
-      menstrualHistory: _menstrualController.text,
-      status: "active",
-      image: _selectedImage,
-    );
+        name: _nameController.text,
+        age: _age,
+        occupation: _occupationController.text,
+        address: _addressController.text,
+        nationality: _nationalityController.text,
+        maritalStatus: _maritalStatus ?? '',
+        gender: _gender ?? '',
+        ipNo: _ipNoController.text,
+        opNo: _opNoController.text,
+        roomNo: _roomNoController.text,
+        dateOfAdmission: _dateOfAdmission,
+        dateOfDischarge: _dateOfDischarge,
+        diagnosis: _diagnosisController.text,
+        presentComplaints: _presentComplaintsController.text,
+        historyOfPresentComplaints: _historyOfPresentComplaintsController.text,
+        pastHistory: _pastHistoryController.text,
+        heartRate: _heartRateController.text,
+        weight: _weightController.text,
+        height: _heightController.text,
+        diet: _dietController.text,
+        apetite: _apetiteController.text,
+        bowel: _bowelController.text,
+        sleep: _sleepController.text,
+        urine: _urineController.text,
+        bp: _bpController.text,
+        habits: _habitsController.text,
+        hereditary: _hereditaryController.text,
+        sensitivity: _hyperController.text,
+        menstrualHistory: _menstrualController.text,
+        status: "active",
+        image: _selectedImage,
+        naadi: _naadiController.text,
+        mutra: _mutraController.text,
+        malam: _malamController.text,
+        jihwa: _jihwaController.text,
+        sabda: _sabdaController.text,
+        sparsa: _sparsaController.text,
+        drik: _drikController.text,
+        akriti: _akritiController.text);
 
-    final box = await Hive.openBox<Patient>('patients4_3');
-    await box.add(patient);
+    // final box = await Hive.openBox<Patient>('patients4_3');
+    await widget.patientBox.add(patient);
 
     // Show success message
     displayInfoBar(
@@ -206,6 +233,15 @@ class _PatientInputFormState extends State<PatientInputForm> {
               _bowelController.clear();
               _sleepController.clear();
               _urineController.clear();
+              _hyperController.dispose();
+              _naadiController.clear();
+              _mutraController.clear();
+              _malamController.clear();
+              _jihwaController.clear();
+              _sabdaController.clear();
+              _sparsaController.clear();
+              _drikController.clear();
+              _akritiController.clear();
             },
           ),
         );
@@ -503,6 +539,62 @@ class _PatientInputFormState extends State<PatientInputForm> {
                 maxLines: 2,
               ),
             ),
+            InfoLabel(
+              label: 'Naadi',
+              child: TextFormBox(
+                controller: _naadiController,
+                placeholder: 'Enter naadi condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Mutra',
+              child: TextFormBox(
+                controller: _mutraController,
+                placeholder: 'Enter mutra condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Malam',
+              child: TextFormBox(
+                controller: _malamController,
+                placeholder: 'Enter malam condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Jihwa',
+              child: TextFormBox(
+                controller: _jihwaController,
+                placeholder: 'Enter jihwa condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Sabda',
+              child: TextFormBox(
+                controller: _sabdaController,
+                placeholder: 'Enter sabda condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Sparsa',
+              child: TextFormBox(
+                controller: _sparsaController,
+                placeholder: 'Enter sparsa condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Drik',
+              child: TextFormBox(
+                controller: _drikController,
+                placeholder: 'Enter drik condtition',
+              ),
+            ),
+            InfoLabel(
+              label: 'Askriti',
+              child: TextFormBox(
+                controller: _akritiController,
+                placeholder: 'Enter akriti condtition',
+              ),
+            ),
             const SizedBox(height: 10),
             InfoLabel(
               label: 'Hyper Sensitivity',
@@ -553,11 +645,6 @@ class _PatientInputFormState extends State<PatientInputForm> {
                         onPressed: _pickImage,
                         child: const Text('Pick Image'),
                       ),
-                      // const SizedBox(width: 10),
-                      // FilledButton(
-                      //   onPressed: _captureImage,
-                      //   child: const Text('Capture Image'),
-                      // ),
                     ],
                   ),
                 ],
@@ -628,27 +715,3 @@ class DatabaseCleanup {
     }
   }
 }
-
-// class MyCameraDelegate extends ImagePickerCameraDelegate {
-//   @override
-//   Future<XFile?> takePhoto(
-//       {ImagePickerCameraDelegateOptions options =
-//           const ImagePickerCameraDelegateOptions()}) async {
-//     return _takeAPhoto(options.preferredCameraDevice);
-//   }
-
-//   @override
-//   Future<XFile?> takeVideo(
-//       {ImagePickerCameraDelegateOptions options =
-//           const ImagePickerCameraDelegateOptions()}) async {
-//     return _takeAVideo(options.preferredCameraDevice);
-//   }
-// }
-
-// // ···
-// void setUpCameraDelegate() {
-//   final ImagePickerPlatform instance = ImagePickerPlatform.instance;
-//   if (instance is CameraDelegatingImagePickerPlatform) {
-//     instance.cameraDelegate = MyCameraDelegate();
-//   }
-// }

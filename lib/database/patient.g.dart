@@ -30,7 +30,9 @@ class PatientAdapter extends TypeAdapter<Patient> {
       dateOfAdmission: fields[10] as DateTime,
       dateOfDischarge: fields[11] as DateTime,
       diagnosis: fields[12] as String,
-      history: fields[13] as String,
+      presentComplaints: fields[13] as String,
+      historyOfPresentComplaints: fields[39] as String,
+      pastHistory: fields[40] as String,
       heartRate: fields[14] as String,
       bp: fields[23] as String,
       weight: fields[15] as String,
@@ -47,6 +49,14 @@ class PatientAdapter extends TypeAdapter<Patient> {
       image: fields[38] as Uint8List?,
       caseSheets: (fields[22] as List?)?.cast<CaseSheetEntry>(),
       status: fields[26] as String?,
+      naadi: fields[42] as String,
+      mutra: fields[43] as String,
+      malam: fields[44] as String,
+      jihwa: fields[45] as String,
+      sabda: fields[46] as String,
+      sparsa: fields[47] as String,
+      drik: fields[48] as String,
+      akriti: fields[49] as String,
     )
       ..billRegister = (fields[24] as List?)?.cast<BillEntry>()
       ..medicationsEntry = (fields[25] as List?)?.cast<MedicationsEntry>()
@@ -56,13 +66,14 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..treatment = fields[30] as String?
       ..totalBill = fields[31] as double
       ..days = fields[32] as int
-      ..billNo = fields[33] as String;
+      ..billNo = fields[33] as String
+      ..consumables = (fields[41] as List?)?.cast<ConsumablesEntry>();
   }
 
   @override
   void write(BinaryWriter writer, Patient obj) {
     writer
-      ..writeByte(39)
+      ..writeByte(50)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -90,7 +101,7 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..writeByte(12)
       ..write(obj.diagnosis)
       ..writeByte(13)
-      ..write(obj.history)
+      ..write(obj.presentComplaints)
       ..writeByte(14)
       ..write(obj.heartRate)
       ..writeByte(15)
@@ -140,7 +151,29 @@ class PatientAdapter extends TypeAdapter<Patient> {
       ..writeByte(37)
       ..write(obj.menstrualHistory)
       ..writeByte(38)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(39)
+      ..write(obj.historyOfPresentComplaints)
+      ..writeByte(40)
+      ..write(obj.pastHistory)
+      ..writeByte(41)
+      ..write(obj.consumables)
+      ..writeByte(42)
+      ..write(obj.naadi)
+      ..writeByte(43)
+      ..write(obj.mutra)
+      ..writeByte(44)
+      ..write(obj.malam)
+      ..writeByte(45)
+      ..write(obj.jihwa)
+      ..writeByte(46)
+      ..write(obj.sabda)
+      ..writeByte(47)
+      ..write(obj.sparsa)
+      ..writeByte(48)
+      ..write(obj.drik)
+      ..writeByte(49)
+      ..write(obj.akriti);
   }
 
   @override
@@ -276,6 +309,52 @@ class MedicationsEntryAdapter extends TypeAdapter<MedicationsEntry> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is MedicationsEntryAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ConsumablesEntryAdapter extends TypeAdapter<ConsumablesEntry> {
+  @override
+  final int typeId = 4;
+
+  @override
+  ConsumablesEntry read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ConsumablesEntry(
+      price: fields[0] as double?,
+      particulars: fields[1] as String?,
+      quantity: fields[2] as String?,
+      rate: fields[3] as String?,
+      date: fields[4] as DateTime?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ConsumablesEntry obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.price)
+      ..writeByte(1)
+      ..write(obj.particulars)
+      ..writeByte(2)
+      ..write(obj.quantity)
+      ..writeByte(3)
+      ..write(obj.rate)
+      ..writeByte(4)
+      ..write(obj.date);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConsumablesEntryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

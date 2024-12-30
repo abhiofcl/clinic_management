@@ -37,7 +37,7 @@ void main() async {
 
   // Open the box
   final patientBox = await Hive.openBox<Patient>('patients4_3');
-  final employeeBox = await Hive.openBox<Patient>('employees_1_1');
+  final employeeBox = await Hive.openBox<Employee>('employees_1_1');
 
   // runApp(MyApp());
   runApp(MyApp(patientBox: patientBox, employeeBox: employeeBox));

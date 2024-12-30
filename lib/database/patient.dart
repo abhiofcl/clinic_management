@@ -131,6 +131,23 @@ class Patient extends HiveObject {
 
   @HiveField(41)
   List<ConsumablesEntry>? consumables;
+  @HiveField(42)
+  String naadi;
+  @HiveField(43)
+  String mutra;
+  @HiveField(44)
+  String malam;
+
+  @HiveField(45)
+  String jihwa;
+  @HiveField(46)
+  String sabda;
+  @HiveField(47)
+  String sparsa;
+  @HiveField(48)
+  String drik;
+  @HiveField(49)
+  String akriti;
 
   Patient({
     required this.name,
@@ -165,6 +182,14 @@ class Patient extends HiveObject {
     this.image,
     this.caseSheets,
     this.status,
+    required this.naadi,
+    required this.mutra,
+    required this.malam,
+    required this.jihwa,
+    required this.sabda,
+    required this.sparsa,
+    required this.drik,
+    required this.akriti,
   });
 }
 

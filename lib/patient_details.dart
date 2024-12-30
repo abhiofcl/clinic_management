@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:clinic_management_new/database/patient.dart';
-import 'package:clinic_management_new/pages/consumables_page.dart';
 import 'package:clinic_management_new/pages/daily_casesheet.dart';
 import 'package:clinic_management_new/pages/medicine_page.dart';
 import 'package:clinic_management_new/pages/update_bill_details.dart';
@@ -15,7 +14,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class PatientListPage extends StatefulWidget {
-  const PatientListPage({super.key});
+  final Box patientBox;
+  const PatientListPage({super.key, required this.patientBox});
 
   @override
   State<PatientListPage> createState() => _PatientListPageState();
@@ -266,22 +266,6 @@ class _PatientListPageState extends State<PatientListPage> {
                                 const SizedBox(width: 8),
                                 // const SizedBox(width: 8),
                                 FilledButton(
-                                  child: const Text('Update Consumables'),
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        FluentPageRoute(
-                                          builder: (context) =>
-                                              ConsumablesUpdateWidget(
-                                            patient: patient,
-                                            index: index,
-                                          ),
-                                        ));
-                                  },
-                                ),
-                                const SizedBox(width: 8),
-                                // const SizedBox(width: 8),
-                                FilledButton(
                                   child: const Text('Update Daily Casesheet'),
                                   onPressed: () {
                                     Navigator.push(
@@ -335,10 +319,6 @@ class _PatientListPageState extends State<PatientListPage> {
                     _buildInfoRow('Date of Discharge',
                         _formatDate(patient.dateOfDischarge)),
                     _buildInfoRow('Diagnosis', patient.diagnosis),
-                    _buildInfoRow(
-                        'Present Complaints', patient.presentComplaints),
-                    _buildInfoRow('History of Present Complaints',
-                        patient.historyOfPresentComplaints),
                     _buildInfoRow('Past History', patient.pastHistory),
                     _buildInfoRow('Heart Rate', patient.heartRate),
                     _buildInfoRow('Weight', patient.weight),
@@ -895,13 +875,13 @@ class _PatientListPageState extends State<PatientListPage> {
     );
   }
 
-  @override
-  void dispose() {
-    if (_patientBox != null && _patientBox!.isOpen) {
-      _patientBox!.close();
-    }
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   if (_patientBox != null && _patientBox!.isOpen) {
+  //     _patientBox!.close();
+  //   }
+  //   super.dispose();
+  // }
 }
 
 Future<void> _showNewDialog(

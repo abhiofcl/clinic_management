@@ -5,7 +5,7 @@ import 'package:hive/hive.dart';
 
 part 'employee.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 5)
 class Employee extends HiveObject {
   @HiveField(0)
   String name;
@@ -51,7 +51,7 @@ class Employee extends HiveObject {
   });
 }
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 6)
 class DutySheetEntry extends HiveObject {
   @HiveField(0)
   DateTime? date;
@@ -74,12 +74,17 @@ class DutySheetEntry extends HiveObject {
   @HiveField(6)
   String? remarks;
 
+  @HiveField(7)
+  String? dutyPerformed;
+
   DutySheetEntry({
+    this.patientName,
     this.date,
     this.timeSlot,
     this.qty,
     this.rate,
     this.amount,
     this.remarks,
+    this.dutyPerformed,
   });
 }
