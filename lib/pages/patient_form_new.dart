@@ -189,7 +189,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
         drik: _drikController.text,
         akriti: _akritiController.text);
 
-    // final box = await Hive.openBox<Patient>('patients4_3');
+    // final box = await Hive.openBox<Patient>('patients4_4');
     await widget.patientBox.add(patient);
 
     // Show success message
@@ -706,7 +706,7 @@ class DatabaseCleanup {
       Hive.registerAdapter(PatientAdapter());
 
       // 8. Reopen boxes
-      await Hive.openBox<Patient>('patients4_3');
+      await Hive.openBox<Patient>('patients4_4');
 
       print('Database cleanup completed successfully');
     } catch (e) {

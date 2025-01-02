@@ -11,10 +11,10 @@ import 'package:hive_flutter/adapters.dart';
 //   if (Platform.isWindows) {
 //     final appDocDir = await getApplicationDocumentsDirectory();
 //     Hive.init(appDocDir.path);
-//     await Hive.openBox("patients4_3");
+//     await Hive.openBox("patients4_4");
 //   } else {
 //     await Hive.initFlutter();
-//     await Hive.openBox("patients4_3");
+//     await Hive.openBox("patients4_4");
 //   }
 
 //   // Register the generated adapter
@@ -36,7 +36,7 @@ void main() async {
   Hive.registerAdapter(DutySheetEntryAdapter());
 
   // Open the box
-  final patientBox = await Hive.openBox<Patient>('patients4_3');
+  final patientBox = await Hive.openBox<Patient>('patients4_4');
   final employeeBox = await Hive.openBox<Employee>('employees_1_1');
 
   // runApp(MyApp());

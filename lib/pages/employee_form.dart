@@ -99,7 +99,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
       idProof: _idProofController.text,
     );
 
-    // final box = await Hive.openBox<Patient>('patients4_3');
+    // final box = await Hive.openBox<Patient>('patients4_4');
     await widget.employeeBox.add(employee);
 
     // Show success message

@@ -35,11 +35,11 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
     // print("Starting");
     try {
       // print("Trying");
-      if (!Hive.isBoxOpen('patients4_3')) {
-        patientBox = await Hive.openBox<Patient>('patients4_3');
+      if (!Hive.isBoxOpen('patients4_4')) {
+        patientBox = await Hive.openBox<Patient>('patients4_4');
         // print("Opening");
       } else {
-        patientBox = Hive.box<Patient>('patients4_3');
+        patientBox = Hive.box<Patient>('patients4_4');
         // print("found");
       }
     } catch (e) {
@@ -95,7 +95,7 @@ class _BillUpdateWidgetState extends State<BillUpdateWidget> {
                       ],
                     ),
                     onPressed: () {
-                      patientBox = Hive.box<Patient>('patients4_3');
+                      patientBox = Hive.box<Patient>('patients4_4');
                       setState(() {});
                     }),
               ),
@@ -336,7 +336,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       _rateController.clear();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4_3');
+        patientBox = Hive.box<Patient>('patients4_4');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -402,7 +402,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4_3');
+            final box = Hive.box<Patient>('patients4_4');
             await saveCaseSheet(box);
             // await box.putAt(widget.index, widget.patient);
 

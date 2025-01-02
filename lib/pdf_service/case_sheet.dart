@@ -1,6 +1,7 @@
 // lib/services/pdf_service.dart
 import 'dart:io';
 // import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -48,6 +49,10 @@ class CaseSheetPDFService {
               children: [
                 _buildHeader(),
                 pw.SizedBox(height: 20),
+                pw.Center(
+                  child: _buildHeader2(),
+                ),
+                pw.SizedBox(height: 20),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
@@ -57,6 +62,31 @@ class CaseSheetPDFService {
                 ),
                 pw.SizedBox(height: 20),
                 _buildMedicalInfo(patient),
+                _buildInfoRow('Present Complaints', patient.presentComplaints),
+                _buildInfoRow('History of Present Complaints',
+                    patient.historyOfPresentComplaints),
+                _buildInfoRow('Past History', patient.pastHistory),
+                _buildInfoRow('Heart rate', patient.heartRate),
+                _buildInfoRow('BP', patient.bp),
+                _buildInfoRow('Weight', patient.weight),
+                _buildInfoRow('Height', patient.height),
+                _buildInfoRow('Diet', patient.diet),
+                _buildInfoRow('Apetite', patient.apetite),
+                _buildInfoRow('Bowel', patient.bowel),
+                _buildInfoRow('Sleep', patient.sleep),
+                _buildInfoRow('Urine', patient.urine),
+                _buildInfoRow('Habits / Addictions', patient.habits),
+                _buildInfoRow('Naadi', patient.naadi),
+                _buildInfoRow('Mutra', patient.mutra),
+                _buildInfoRow('Malam', patient.malam),
+                _buildInfoRow('Jihwa', patient.jihwa),
+                _buildInfoRow('Sabda', patient.sabda),
+                _buildInfoRow('Sparsa', patient.sparsa),
+                _buildInfoRow('Drik', patient.drik),
+                _buildInfoRow('Askriti', patient.akriti),
+                _buildInfoRow('Hypersensitivity', patient.sensitivity),
+                _buildInfoRow('Hereditary', patient.hereditary),
+                _buildInfoRow('Menstrual History', patient.menstrualHistory),
                 pw.SizedBox(height: 10),
                 pw.Text("Case History",
                     style: pw.TextStyle(
@@ -201,8 +231,11 @@ class CaseSheetPDFService {
           [
             _buildInfoRow('Name', patient.name),
             _buildInfoRow('Age', '${patient.age} years'),
+            _buildInfoRow('Occupation', patient.occupation),
             _buildInfoRow('Gender', patient.gender),
             _buildInfoRow('Address', patient.address),
+            _buildInfoRow('Nationality', patient.nationality),
+            _buildInfoRow('Marital Status', patient.maritalStatus),
           ],
         ),
       ],
@@ -216,7 +249,7 @@ class CaseSheetPDFService {
         pw.SizedBox(height: 20),
         _buildSection('Admission Information', [
           _buildInfoRow('IP No', patient.ipNo),
-          // _buildInfoRow('OP No', patient.opNo),
+          _buildInfoRow('OP No', patient.opNo),
           _buildInfoRow('Room No', patient.roomNo),
           _buildInfoRow('Date of Admission',
               DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)),
@@ -316,6 +349,33 @@ class CaseSheetPDFService {
           pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
             pw.Text("\nPh : +91 9495172295 | 8075749619"),
           ]),
+          pw.SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildHeader2() {
+    return pw.Container(
+      decoration: const pw.BoxDecoration(
+        border: pw.Border(
+          bottom: pw.BorderSide(
+            color: PdfColors.black,
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.SizedBox(height: 10),
+          pw.Text(
+            'Case Sheet',
+            style: pw.TextStyle(
+              fontSize: 19,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
           pw.SizedBox(height: 10),
         ],
       ),

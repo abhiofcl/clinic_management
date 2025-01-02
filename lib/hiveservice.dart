@@ -17,7 +17,7 @@ class HiveService {
     if (_patientBox != null && _patientBox!.isOpen) {
       return _patientBox!;
     }
-    _patientBox = await Hive.openBox<Patient>('patients4_3');
+    _patientBox = await Hive.openBox<Patient>('patients4_4');
     return _patientBox!;
   }
 
