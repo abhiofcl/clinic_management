@@ -634,10 +634,10 @@ class _PatientListPageState extends State<PatientListPage> {
               ),
               const SizedBox(height: 8),
               InfoLabel(
-                label: 'Adice on discharge',
+                label: 'Advice on discharge',
                 child: TextFormBox(
                   controller: adiceController,
-                  placeholder: 'Enter the adice at discharge',
+                  placeholder: 'Enter the advice at discharge',
                   maxLines: 3,
                 ),
               ),
