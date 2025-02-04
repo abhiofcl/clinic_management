@@ -1,6 +1,6 @@
 # clinic_management_new
 
-A new Flutter project.
+A Desktop application for Clinic management using flutter and fluent ui for windows styling
 
 ## Getting Started
 
