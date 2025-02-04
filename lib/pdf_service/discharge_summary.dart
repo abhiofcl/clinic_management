@@ -43,9 +43,23 @@ class DischarSummaryPDFService {
             padding: const pw.EdgeInsets.all(16), // Padding inside the border
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
+              // mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
                 _buildHeader(),
                 pw.SizedBox(height: 20),
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(
+                        'Discharge Summary',
+                        style: pw.TextStyle(
+                          // color: const PdfColor(0, .5, 0),
+                          fontSize: 18,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ]),
+                // pw.SizedBox(height: 20),
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
