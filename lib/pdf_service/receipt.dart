@@ -163,7 +163,7 @@ class ReceiptPDFService {
           pw.Text(
             style: const pw.TextStyle(
                 fontSize: 13, height: 12, lineSpacing: 5, wordSpacing: 1.5),
-            'Received Rs. ${patient.totalBill} ( ${NumberToWords.convertToWords(patient.totalBill.toInt())} only ) from  $title ${patient.name},  being the ayurveda  treatment  charges  and  stay etc. for ${patient.days} days in Shanthi Ayurveda Ashram ,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
+            'Received (Rs/£/\$). ${patient.totalBill} ( ${NumberToWords.convertToWords(patient.totalBill.toInt())} only ) from  $title ${patient.name},  being the ayurveda  treatment  charges  and  stay etc. for ${patient.days} days in Shanthi Ayurveda Ashram, Ariyoor Venga, Kottoppadom, Mannarkkad, Palakkad, Kerala-678583',
           ),
           pw.SizedBox(height: 40),
           pw.Row(
@@ -183,25 +183,4 @@ class ReceiptPDFService {
       ),
     );
   }
-
-  // static pw.Widget _buildSection(String title, String children) {
-  //   return pw.Column(
-  //     crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //     children: [
-  //       if (title.isNotEmpty) ...[
-  //         pw.Text(
-  //           title,
-  //           style: pw.TextStyle(
-  //             fontSize: 18,
-  //             fontWeight: pw.FontWeight.bold,
-  //           ),
-  //         ),
-  //         pw.SizedBox(height: 10),
-  //       ],
-  //       pw.Text(
-
-  //       ),
-  //     ],
-  //   );
-  // }
 }
