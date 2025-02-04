@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import '../database/patient.dart';
 
 class ReceiptPDFService {
-  static Future<void> generatePatientPDF(Patient patient) async {
+  static Future<void> generatePatientPDF(Patient patient, DateTime date) async {
     final pdf = pw.Document();
 
     // Add page to the PDF
@@ -35,7 +35,7 @@ class ReceiptPDFService {
                   pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.end,
                       children: [
-                        pw.Text(DateFormat('dd/MM/yyyy').format(DateTime.now()))
+                        pw.Text(DateFormat('dd/MM/yyyy').format(date))
                       ]),
                   _buildHeader2(),
                   _buildPatientInfo(patient),

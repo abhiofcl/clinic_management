@@ -28,10 +28,10 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
 
   Future<void> _initializeHive() async {
     try {
-      if (!Hive.isBoxOpen('patients4_4')) {
-        _patientBox = await Hive.openBox<Patient>('patients4_4');
+      if (!Hive.isBoxOpen('patients4_5')) {
+        _patientBox = await Hive.openBox<Patient>('patients4_5');
       } else {
-        _patientBox = Hive.box<Patient>('patients4_4');
+        _patientBox = Hive.box<Patient>('patients4_5');
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -301,7 +301,7 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
             ),
             child: const Text('Delete'),
             onPressed: () async {
-              final box = Hive.box<Patient>('patients4_4');
+              final box = Hive.box<Patient>('patients4_5');
               await box.deleteAt(index);
               Navigator.pop(context);
               displayInfoBar(
@@ -384,7 +384,7 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
               // Update other fields...
 
               // Save to Hive
-              final box = Hive.box<Patient>('patients4_4');
+              final box = Hive.box<Patient>('patients4_5');
               await box.putAt(index, patient);
 
               if (context.mounted) {
@@ -453,7 +453,7 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
   //             // Update other fields...
 
   //             // Save to Hive
-  //             final box = Hive.box<Patient>('patients4_4');
+  //             final box = Hive.box<Patient>('patients4_5');
   //             await box.putAt(index, patient);
 
   //             if (context.mounted) {
@@ -522,7 +522,7 @@ class _DischargedPatientListPageState extends State<DischargedPatientListPage> {
   //             // Update other fields...
 
   //             // Save to Hive
-  //             final box = Hive.box<Patient>('patients4_4');
+  //             final box = Hive.box<Patient>('patients4_5');
   //             await box.putAt(index, patient);
 
   //             if (context.mounted) {

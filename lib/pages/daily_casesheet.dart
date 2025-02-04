@@ -25,10 +25,10 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
 
   Future<void> _initializeHive() async {
     try {
-      if (!Hive.isBoxOpen('patients4_4')) {
-        patientBox = await Hive.openBox<Patient>('patients4_4');
+      if (!Hive.isBoxOpen('patients4_5')) {
+        patientBox = await Hive.openBox<Patient>('patients4_5');
       } else {
-        patientBox = Hive.box<Patient>('patients4_4');
+        patientBox = Hive.box<Patient>('patients4_5');
       }
     } catch (e) {
       print('Error opening Hive box: $e');
@@ -68,7 +68,7 @@ class _CaseSheetWidgetState extends State<CaseSheetWidget> {
                     children: [Text("Reload")],
                   ),
                   onPressed: () {
-                    patientBox = Hive.box<Patient>('patients4_4');
+                    patientBox = Hive.box<Patient>('patients4_5');
                     setState(() {});
                   },
                 ),
@@ -305,7 +305,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
 
       await patient.save();
       setState(() {
-        patientBox = Hive.box<Patient>('patients4_4');
+        patientBox = Hive.box<Patient>('patients4_5');
         patient = patientBox.get(widget.index);
       });
     }
@@ -388,7 +388,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4_4');
+            final box = Hive.box<Patient>('patients4_5');
             await saveCaseSheet(box);
 
             if (context.mounted) {

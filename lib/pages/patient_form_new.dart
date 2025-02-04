@@ -33,17 +33,17 @@ class PatientFormPage extends StatelessWidget {
             },
             child: const Text('Show All'),
           ),
-          material.ElevatedButton(
-            onPressed: () async {
-              await DatabaseCleanup.cleanDatabase();
-              // Optionally show a success message
-              material.ScaffoldMessenger.of(context).showSnackBar(
-                const material.SnackBar(
-                    content: Text('Database reset successfully')),
-              );
-            },
-            child: const Text('Reset Database'),
-          ),
+          // material.ElevatedButton(
+          //   onPressed: () async {
+          //     await DatabaseCleanup.cleanDatabase();
+          //     // Optionally show a success message
+          //     material.ScaffoldMessenger.of(context).showSnackBar(
+          //       const material.SnackBar(
+          //           content: Text('Database reset successfully')),
+          //     );
+          //   },
+          //   child: const Text('Reset Database'),
+          // ),
         ],
       ),
       content: PatientInputForm(
@@ -189,7 +189,7 @@ class _PatientInputFormState extends State<PatientInputForm> {
         drik: _drikController.text,
         akriti: _akritiController.text);
 
-    // final box = await Hive.openBox<Patient>('patients4_4');
+    // final box = await Hive.openBox<Patient>('patients4_5');
     await widget.patientBox.add(patient);
 
     // Show success message
@@ -706,7 +706,7 @@ class DatabaseCleanup {
       Hive.registerAdapter(PatientAdapter());
 
       // 8. Reopen boxes
-      await Hive.openBox<Patient>('patients4_4');
+      await Hive.openBox<Patient>('patients4_5');
 
       print('Database cleanup completed successfully');
     } catch (e) {

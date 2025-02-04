@@ -27,11 +27,11 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
     // print("Starting");
     try {
       // print("Trying");
-      if (!Hive.isBoxOpen('patients4_4')) {
-        patientBox = await Hive.openBox<Patient>('patients4_4');
+      if (!Hive.isBoxOpen('patients4_5')) {
+        patientBox = await Hive.openBox<Patient>('patients4_5');
         // print("Opening");
       } else {
-        patientBox = Hive.box<Patient>('patients4_4');
+        patientBox = Hive.box<Patient>('patients4_5');
         // print("found");
       }
     } catch (e) {
@@ -83,7 +83,7 @@ class _MedicineUpdateWidgetState extends State<MedicineUpdateWidget> {
                       ],
                     ),
                     onPressed: () {
-                      patientBox = Hive.box<Patient>('patients4_4');
+                      patientBox = Hive.box<Patient>('patients4_5');
                       setState(() {});
                     }),
               ),
@@ -290,7 +290,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
       // _quantityController.clear();
 
       setState(() {
-        patientBox = Hive.box<Patient>('patients4_4');
+        patientBox = Hive.box<Patient>('patients4_5');
         patient = patientBox.get(widget.index);
       });
       // _initializeHiveDatas();
@@ -302,7 +302,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: const Text('Add Bill Record'),
+      title: const Text('Add Medicine Record'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -340,7 +340,7 @@ class _NewWidgetDialogState extends State<NewWidgetDialog> {
         FilledButton(
           child: const Text('Save'),
           onPressed: () async {
-            final box = Hive.box<Patient>('patients4_4');
+            final box = Hive.box<Patient>('patients4_5');
             await saveCaseSheet(box);
             // await box.putAt(widget.index, widget.patient);
 

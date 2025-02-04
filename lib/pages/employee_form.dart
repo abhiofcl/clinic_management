@@ -20,31 +20,31 @@ class EmployeeFormPage extends StatelessWidget {
     return ScaffoldPage(
       header: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          material.ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                material.MaterialPageRoute(
-                  builder: (context) => PatientListPage(
-                    patientBox: employeeBox,
-                  ),
-                ),
-              );
-            },
-            child: const Text('Show All'),
-          ),
-          material.ElevatedButton(
-            onPressed: () async {
-              await DatabaseCleanup.cleanDatabase();
-              // Optionally show a success message
-              material.ScaffoldMessenger.of(context).showSnackBar(
-                const material.SnackBar(
-                    content: Text('Database reset successfully')),
-              );
-            },
-            child: const Text('Reset Database'),
-          ),
-        ],
+        // children: [
+        //   material.ElevatedButton(
+        //     onPressed: () {
+        //       Navigator.of(context).push(
+        //         material.MaterialPageRoute(
+        //           builder: (context) => PatientListPage(
+        //             patientBox: employeeBox,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //     child: const Text('Show All'),
+        //   ),
+        //   material.ElevatedButton(
+        //     onPressed: () async {
+        //       await DatabaseCleanup.cleanDatabase();
+        //       // Optionally show a success message
+        //       material.ScaffoldMessenger.of(context).showSnackBar(
+        //         const material.SnackBar(
+        //             content: Text('Database reset successfully')),
+        //       );
+        //     },
+        //     child: const Text('Reset Database'),
+        //   ),
+        // ],
       ),
       content: EmployeeInputForm(
         employeeBox: employeeBox,
@@ -99,7 +99,7 @@ class _EmployeeInputFormState extends State<EmployeeInputForm> {
       idProof: _idProofController.text,
     );
 
-    // final box = await Hive.openBox<Patient>('patients4_4');
+    // final box = await Hive.openBox<Patient>('patients4_5');
     await widget.employeeBox.add(employee);
 
     // Show success message

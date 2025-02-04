@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../database/patient.dart';
 
 class BillTablePDFService {
-  static Future<void> generatePatientPDF(Patient patient) async {
+  static Future<void> generatePatientPDF(Patient patient, DateTime date) async {
     final pdf = pw.Document();
     // final dateFormat = DateFormat('dd-MM-yyyy');
 
@@ -83,8 +83,7 @@ class BillTablePDFService {
                   pw.Row(children: [pw.Text("Bill No : ${patient.billNo}")]),
                   pw.SizedBox(height: 10),
                   pw.Row(children: [
-                    pw.Text(
-                        "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}")
+                    pw.Text("Date : ${DateFormat('dd/MM/yyyy').format(date)}")
                   ]),
                   pw.SizedBox(height: 30),
                   pw.Table.fromTextArray(

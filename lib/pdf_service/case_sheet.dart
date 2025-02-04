@@ -113,7 +113,7 @@ class CaseSheetPDFService {
                 pw.SizedBox(height: 20),
                 pw.Text("Condition at the time of Discharge",
                     style: pw.TextStyle(
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: pw.FontWeight.bold,
                     )),
                 pw.SizedBox(height: 10),
@@ -124,7 +124,7 @@ class CaseSheetPDFService {
                 pw.SizedBox(height: 20),
                 pw.Text("Advice on Discharge",
                     style: pw.TextStyle(
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: pw.FontWeight.bold,
                     )),
                 pw.SizedBox(height: 10),
@@ -132,7 +132,7 @@ class CaseSheetPDFService {
                 pw.SizedBox(height: 20),
                 pw.Text("Medications",
                     style: pw.TextStyle(
-                      fontSize: 15,
+                      fontSize: 13,
                       fontWeight: pw.FontWeight.bold,
                     )),
                 pw.SizedBox(height: 10),

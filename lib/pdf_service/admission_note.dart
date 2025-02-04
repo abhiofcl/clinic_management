@@ -162,7 +162,7 @@ class AdmissionNotePDFService {
               // height: 5,
               fontSize: 13,
             ),
-            '$title ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram,Ariyoor Venga,Kottoppadom,Mannarkkad,Palakkad,Kerala-678583',
+            '$title ${patient.name}, aged ${patient.age} suffer from ${patient.diagnosis} was admitted and treated from ${DateFormat('dd/MM/yyyy').format(patient.dateOfAdmission)} to ${DateFormat('dd/MM/yyyy').format(patient.dateOfDischarge)} in Shanthi Ayurveda Ashram, Ariyoor Venga, Kottoppadom, Mannarkkad, Palakkad, Kerala-678583',
           ),
           pw.SizedBox(height: 40),
           pw.Row(
